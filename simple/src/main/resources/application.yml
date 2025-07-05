@@ -5,16 +5,16 @@ spring:
     name: simple
     security:
       secret:
-        key: ${SECRET_KEY}
+        key: ${SECRET_KEY:S7owG/KSaSY/f+mrRMg61uTW8QPQluwHMx6M8Teq0mA=}
       token:
         expiration: ${TOKEN_EXPIRATION:259200000} # 3 days
       refresh-token:
         expiration: ${REFRESH_TOKEN_EXPIRATION:3600000} # 2 hours
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: password123
-    url: jdbc:mysql://localhost:3306/simpledb
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password123}
+    url: jdbc:mysql://localhost:3306/${DB_URL:simpledb}
   jpa:
     properties:
       hibernate:
