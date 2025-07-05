@@ -1,11 +1,20 @@
 spring:
+  main:
+    banner-mode: "off"
   application:
     name: simple
+    security:
+      secret:
+        key: ${SECRET_KEY}
+      token:
+        expiration: ${TOKEN_EXPIRATION:259200000} # 3 days
+      refresh-token:
+        expiration: ${REFRESH_TOKEN_EXPIRATION:3600000} # 2 hours
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: password123
-    url: jdbc:mysql://localhost:3306/db_name
+    url: jdbc:mysql://localhost:3306/simpledb
   jpa:
     properties:
       hibernate:
