@@ -3,13 +3,6 @@ spring:
     banner-mode: "off"
   application:
     name: simple
-    security:
-      secret:
-        key: ${SECRET_KEY:S7owG/KSaSY/f+mrRMg61uTW8QPQluwHMx6M8Teq0mA=}
-      token:
-        expiration: ${TOKEN_EXPIRATION:259200000} # 3 days
-      refresh-token:
-        expiration: ${REFRESH_TOKEN_EXPIRATION:3600000} # 2 hours
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME:root}
@@ -23,3 +16,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: 'true'
+  security:
+    secret:
+      key: ${SECRET_KEY}
+    token:
+      expiration: ${TOKEN_EXPIRATION:259200000} # 3 days
+    refresh:
+      expiration: ${REFRESH_EXPIRATION:3600000} # 2 hours
