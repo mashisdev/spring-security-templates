@@ -1,5 +1,6 @@
 package com.jwt.simple.user.mapper;
 
+import com.jwt.simple.auth.RegisterRequest;
 import com.jwt.simple.user.dto.UserDto;
 import com.jwt.simple.user.entity.User;
 import org.mapstruct.Mapper;
@@ -12,4 +13,5 @@ public interface UserMapper {
 
     User userDtoToUser(UserDto userDto);
 
+    User registerRequestToUser(RegisterRequest request);
 }
