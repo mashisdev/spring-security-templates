@@ -12,23 +12,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Slf4j
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
+
     @Autowired
     private JwtService jwtService;
     @Autowired
     private UserDetailsService userDetailsService;
-    private HandlerExceptionResolver handlerExceptionResolver;
-
-    @Autowired
-    public JwtAuthFilter(HandlerExceptionResolver handlerExceptionResolver) {
-        this.handlerExceptionResolver = handlerExceptionResolver;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -91,7 +88,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             log.error("Error processing JWT: {}", e.getMessage());
-            handlerExceptionResolver.resolveException(request, response, null, e);
         }
 
         filterChain.doFilter(request, response);

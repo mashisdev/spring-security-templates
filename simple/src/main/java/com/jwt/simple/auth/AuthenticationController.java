@@ -1,5 +1,7 @@
 package com.jwt.simple.auth;
 
+import com.jwt.simple.auth.request.AuthenticationRequest;
+import com.jwt.simple.auth.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +22,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
 
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }

@@ -1,17 +1,25 @@
 package com.jwt.simple.user.mapper;
 
-import com.jwt.simple.auth.RegisterRequest;
+import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.user.dto.UserDto;
 import com.jwt.simple.user.entity.User;
+import com.jwt.simple.user.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    UserDto userToUserDto (User user);
+    // User <-> UserEntity
+    User userEntityToUser(UserEntity userEntity);
 
-    User userDtoToUser(UserDto userDto);
+    UserEntity userToUserEntity(User user);
 
-    User registerRequestToUser(RegisterRequest request);
+    // User <-> UserDto
+    UserDto userToUserDto(User user);
+
+    User userDtoToUser(UserDto userDTO);
+
+    // RegisterRequest <-> User
+    User registerRequestToUser(RegisterRequest registerRequest);
 }

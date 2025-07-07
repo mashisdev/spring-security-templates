@@ -1,4 +1,4 @@
-package com.jwt.simple.auth;
+package com.jwt.simple.auth.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
