@@ -1,5 +1,6 @@
 package com.jwt.simple.config;
 
+import com.jwt.simple.user.repository.UserJpaRepository;
 import com.jwt.simple.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class AuthenticationConfig {
 
-    private final UserRepository userRepository;
+    private final UserJpaRepository userJpaRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
+        return username -> userJpaRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 

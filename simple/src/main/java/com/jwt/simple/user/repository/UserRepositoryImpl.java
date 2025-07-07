@@ -17,8 +17,8 @@ public class UserRepositoryImpl implements UserRepository {
     private final UserMapper userMapper;
 
     @Override
-    public User save(User userEntity) {
-        UserEntity entity = userMapper.userToUserEntity(userEntity);
+    public User save(User user) {
+        UserEntity entity = userMapper.userToUserEntity(user);
         UserEntity saved = userJpaRepository.save(entity);
         return userMapper.userEntityToUser(saved);
     }
