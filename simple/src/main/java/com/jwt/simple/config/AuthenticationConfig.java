@@ -1,5 +1,6 @@
 package com.jwt.simple.config;
 
+import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.user.repository.UserJpaRepository;
 import com.jwt.simple.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class AuthenticationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userJpaRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     @Bean

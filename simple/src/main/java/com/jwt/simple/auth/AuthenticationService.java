@@ -2,10 +2,11 @@ package com.jwt.simple.auth;
 
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
+import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.JwtService;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.UserAlreadyExistException;
-import com.jwt.simple.user.entity.UserEntity;
+import com.jwt.simple.user.entity.User;
 import com.jwt.simple.user.mapper.UserMapper;
 import com.jwt.simple.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +27,15 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        UserEntity user = userMapper.registerRequestToUser(request);
+        User user = userMapper.registerRequestToUser(request);
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) throw new UserAlreadyExistException("User already registered");
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        UserEntity saved = userRepository.save(user);
+        User saved = userRepository.save(user);
 
-        String jwtToken = jwtService.generateToken(saved);
+        String jwtToken = jwtService.generateToken(userMapper.userToUserEntity(user));
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -50,10 +51,10 @@ public class AuthenticationService {
                 )
         );
 
-        UserEntity user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
-        String jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(userMapper.userToUserEntity(user));
 
         return AuthenticationResponse.builder()
                 .token(jwtToken)

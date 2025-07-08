@@ -2,6 +2,7 @@ package com.jwt.simple.auth;
 
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
+import com.jwt.simple.auth.response.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

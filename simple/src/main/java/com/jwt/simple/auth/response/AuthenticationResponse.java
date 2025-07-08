@@ -1,4 +1,4 @@
-package com.jwt.simple.auth;
+package com.jwt.simple.auth.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
