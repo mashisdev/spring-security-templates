@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface UserController {
 
+    ResponseEntity<UserDto> findMeByEmail();
+
     ResponseEntity<UserDto> findById(Long id);
 
     ResponseEntity<List<UserDto>> findAll();
