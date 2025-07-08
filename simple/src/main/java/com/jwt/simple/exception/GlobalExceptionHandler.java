@@ -1,6 +1,6 @@
 package com.jwt.simple.exception;
 
-import com.jwt.simple.exception.user.UserAlreadyExistException;
+import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
 import org.springframework.http.HttpStatus;
@@ -20,19 +20,19 @@ public class GlobalExceptionHandler {
     // User Not Found
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("user", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("auth", ex.getMessage()));
     }
 
     // Registration
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<Map<String, String>> handleEmailAlreadyExists(UserAlreadyExistException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("user", ex.getMessage()));
+    @ExceptionHandler(UserAlreadyRegisteredException.class)
+    public ResponseEntity<Map<String, String>> handleUserAlreadyRegistered(UserAlreadyRegisteredException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("auth", ex.getMessage()));
     }
 
     // Login
     @ExceptionHandler(WrongEmailOrPasswordException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFound(WrongEmailOrPasswordException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("user", ex.getMessage()));
+    public ResponseEntity<Map<String, String>> handleWrongEmailOrPassword(WrongEmailOrPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("auth", ex.getMessage()));
     }
 
     // Method Not Valid

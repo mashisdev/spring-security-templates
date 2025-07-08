@@ -4,7 +4,7 @@ import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.JwtService;
-import com.jwt.simple.exception.user.UserAlreadyExistException;
+import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
 import com.jwt.simple.user.entity.User;
 import com.jwt.simple.user.mapper.UserMapper;
@@ -29,7 +29,7 @@ public class AuthenticationService {
 
         User user = userMapper.registerRequestToUser(request);
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) throw new UserAlreadyExistException("User already registered");
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) throw new UserAlreadyRegisteredException("User already registered");
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
