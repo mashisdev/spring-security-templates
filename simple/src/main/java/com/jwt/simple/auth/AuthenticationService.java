@@ -4,7 +4,6 @@ import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.JwtService;
-import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.UserAlreadyExistException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
 import com.jwt.simple.user.entity.User;
