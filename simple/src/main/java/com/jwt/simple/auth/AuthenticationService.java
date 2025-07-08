@@ -6,6 +6,7 @@ import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.JwtService;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.UserAlreadyExistException;
+import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
 import com.jwt.simple.user.entity.User;
 import com.jwt.simple.user.mapper.UserMapper;
 import com.jwt.simple.user.repository.UserRepository;
@@ -44,15 +45,19 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new WrongEmailOrPasswordException("Wrong email or password"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new WrongEmailOrPasswordException("Wrong email or password");
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         String jwtToken = jwtService.generateToken(userMapper.userToUserEntity(user));
 
