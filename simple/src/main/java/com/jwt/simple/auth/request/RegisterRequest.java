@@ -22,7 +22,6 @@ public class RegisterRequest {
 
     @NotBlank(message = "The email is mandatory")
     @Email(message = "The given email does not match the pattern of a valid email")
-    @UniqueElements()
     private String email;
 
     @NotBlank(message = "The password is mandatory")

@@ -35,8 +35,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -45,9 +43,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try {
 
-            jwt = authHeader.substring(7);
-
-            userEmail = jwtService.extractUsername(jwt);
+            final String jwt = authHeader.substring(7);
+            final String userEmail = jwtService.extractUsername(jwt);
 
             if (userEmail == null || SecurityContextHolder.getContext().getAuthentication() != null) {
                 log.debug("The JWT doesn't contains a username");
