@@ -4,6 +4,7 @@ import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.user.dto.UserDto;
 import com.jwt.simple.user.entity.User;
 import com.jwt.simple.user.entity.UserEntity;
+import com.jwt.simple.user.request.UpdateUserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
@@ -20,6 +21,9 @@ public interface UserMapper {
 
     User userDtoToUser(UserDto userDTO);
 
-    // RegisterRequest <-> User
+    // RegisterRequest -> User
     User registerRequestToUser(RegisterRequest registerRequest);
+
+    // UpdateUserRequest -> UserDto
+    UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest);
 }

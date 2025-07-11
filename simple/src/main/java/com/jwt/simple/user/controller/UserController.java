@@ -1,6 +1,7 @@
 package com.jwt.simple.user.controller;
 
 import com.jwt.simple.user.dto.UserDto;
+import com.jwt.simple.user.request.UpdateUserRequest;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface UserController {
 
     ResponseEntity<List<UserDto>> findAll();
 
-    ResponseEntity<UserDto> update(UserDto userDto);
+    ResponseEntity<UserDto> update(UpdateUserRequest updateUserRequest);
 
     ResponseEntity<Void> delete(Long id);
 }

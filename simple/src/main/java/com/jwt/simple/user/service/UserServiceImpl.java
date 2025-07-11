@@ -2,9 +2,11 @@ package com.jwt.simple.user.service;
 
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.user.dto.UserDto;
+import com.jwt.simple.user.entity.User;
 import com.jwt.simple.user.mapper.UserMapper;
 import com.jwt.simple.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +35,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto userDto) {
-        return null;
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new UserNotFoundException("User not found"));
+        BeanUtils.copyProperties(userMapper.userDtoToUser(userDto), user, "password");
+        userRepository.save(user);
+        return userMapper.userToUserDto(user);
     }
 
     @Override

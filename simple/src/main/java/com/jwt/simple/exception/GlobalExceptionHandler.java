@@ -1,5 +1,6 @@
 package com.jwt.simple.exception;
 
+import com.jwt.simple.exception.user.NotAllowedToChangeCredentialsException;
 import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(WrongEmailOrPasswordException.class)
     public ResponseEntity<Map<String, String>> handleWrongEmailOrPassword(WrongEmailOrPasswordException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("auth", ex.getMessage()));
+    }
+
+    // Not Allowed To Change Credentials
+    @ExceptionHandler(NotAllowedToChangeCredentialsException.class)
+    public ResponseEntity<Map<String, String>> handleNotAllowedToChangeCredentials(NotAllowedToChangeCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("auth", ex.getMessage()));
     }
 
     // Method Not Valid
