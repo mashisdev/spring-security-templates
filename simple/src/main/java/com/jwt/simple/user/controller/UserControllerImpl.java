@@ -4,18 +4,13 @@ import com.jwt.simple.user.dto.UserDto;
 import com.jwt.simple.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
 
@@ -24,8 +19,8 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping("/me")
     public ResponseEntity<UserDto> findMeByEmail() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok(userService.findByEmail(auth.getName()));
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(userService.findByEmail(user));
     }
 
     @Override
@@ -35,12 +30,15 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @GetMapping("/all")
     public ResponseEntity<List<UserDto>> findAll() {
-        return null;
+        return ResponseEntity.ok(userService.findAll());
     }
 
     @Override
-    public ResponseEntity<UserDto> update(UserDto userDto) {
+    @PutMapping()
+    public ResponseEntity<UserDto> update(@RequestBody UserDto userDto) {
+        String user = SecurityContextHolder.getContext().getAuthentication().getName();
         return null;
     }
 
