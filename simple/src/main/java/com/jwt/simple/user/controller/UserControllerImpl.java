@@ -6,6 +6,7 @@ import com.jwt.simple.user.mapper.UserMapper;
 import com.jwt.simple.user.request.UpdateUserRequest;
 import com.jwt.simple.user.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,10 +44,10 @@ public class UserControllerImpl implements UserController {
     @Override
     @PutMapping()
     public ResponseEntity<UserDto> update(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        UserDto currentUserEmail = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         UserDto updatedUser = userService.findById(updateUserRequest.getId());
 
-        if (!currentUserEmail.getId().equals(updatedUser.getId())) {
+        if (!currentUser.getId().equals(updatedUser.getId())) {
             throw new NotAllowedToChangeCredentialsException("Not allowed to change another user's credentials");
         }
 
@@ -54,8 +55,15 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @DeleteMapping()
-    public ResponseEntity<Void> delete(Long id) {
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
+        UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        if (!currentUser.equals(userService.findById(id))) {
+            throw new NotAllowedToChangeCredentialsException("Not allowed to change another user's credentials");
+        }
+
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
