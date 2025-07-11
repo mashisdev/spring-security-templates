@@ -5,9 +5,9 @@ spring:
     name: simple
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:password123}
-    url: jdbc:mysql://localhost:3306/${DB_URL:simpledb}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
   jpa:
     properties:
       hibernate:
@@ -16,10 +16,3 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: 'true'
-  security:
-    secret:
-      key: ${SECRET_KEY}
-    token:
-      expiration: ${TOKEN_EXPIRATION:259200000} # 3 days
-    refresh:
-      expiration: ${REFRESH_EXPIRATION:3600000} # 2 hours
