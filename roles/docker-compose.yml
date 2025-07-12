@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SECRET_KEY: S7owG/KSaSY/f+mrRMg61uTW8QPQluwHMx6M8Teq0mA=
+      TOKEN_EXPIRATION: 3600000
+      REFRESH_EXPIRATION: 259200000
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/your_database_name
+      SPRING_DATASOURCE_USERNAME: your_username
+      SPRING_DATASOURCE_PASSWORD: your_password
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.3
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: your_database_name
+      MYSQL_USER: your_username
+      MYSQL_PASSWORD: your_password
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
