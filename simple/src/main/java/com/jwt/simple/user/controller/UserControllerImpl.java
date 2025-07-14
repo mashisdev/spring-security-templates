@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("api/users")
@@ -42,12 +43,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PutMapping()
-    public ResponseEntity<UserDto> update(@RequestBody @Valid UpdateUserRequest updateUserRequest) {
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
         UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         UserDto updatedUser = userService.findById(updateUserRequest.getId());
 
-        if (!currentUser.getId().equals(updatedUser.getId())) {
+        if (!currentUser.getId().equals(updatedUser.getId()) || !currentUser.getId().equals(id)) {
             throw new NotAllowedToChangeCredentialsException("Not allowed to change another user's credentials");
         }
 
@@ -56,7 +57,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable @Positive Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (!currentUser.equals(userService.findById(id))) {

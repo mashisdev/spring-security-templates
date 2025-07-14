@@ -14,7 +14,7 @@ public interface UserController {
 
     ResponseEntity<List<UserDto>> findAll();
 
-    ResponseEntity<UserDto> update(UpdateUserRequest updateUserRequest);
+    ResponseEntity<UserDto> update(Long id, UpdateUserRequest updateUserRequest);
 
     ResponseEntity<Void> delete(Long id);
 }

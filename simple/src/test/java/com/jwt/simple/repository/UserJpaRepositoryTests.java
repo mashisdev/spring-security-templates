@@ -4,7 +4,6 @@ import com.jwt.simple.user.repository.UserJpaRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Optional;
@@ -19,9 +18,6 @@ class UserJpaRepositoryTests {
 
     @Autowired
     private UserJpaRepository userJpaRepository;
-
-    @Autowired
-    private TestEntityManager entityManager;
 
     private UserEntity testUser;
 
@@ -97,7 +93,6 @@ class UserJpaRepositoryTests {
         UserEntity userToDelete = userJpaRepository.findByEmail("jane.smith@example.com").orElseThrow();
 
         userJpaRepository.delete(userToDelete);
-        entityManager.flush(); // Force deletion to DB
 
         Optional<UserEntity> deletedUser = userJpaRepository.findById(userToDelete.getId());
         assertFalse(deletedUser.isPresent());
