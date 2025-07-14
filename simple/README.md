@@ -12,14 +12,6 @@ This project is a robust Spring Boot application designed to provide a secure us
 ## Dependencies
 
 #### Core Frameworks & Libraries
-<img width="80" alt="Spring Boot image" src="https://github.com/user-attachments/assets/9f9c00e7-67f5-402c-9c51-0fe42d81f8c4" />
-<img width="80" alt="Spring Data JPA image" src="https://github.com/user-attachments/assets/c4e065c9-0d16-4d1a-8294-e5b6a971fd4e" />
-<img width="80" alt="MySql image" src="https://github.com/user-attachments/assets/eab77bfb-fa00-4f39-a2b2-e185152e620a" />
-<img width="80" alt="Spring Security image" src="https://github.com/user-attachments/assets/669d73d0-f454-4c4f-a2ab-0f5ca3ff9ea3" />
-<img width="80" alt="JJWT image" src="https://github.com/user-attachments/assets/c42b78cd-247e-4787-9cd8-d93b48e0e9dc" />
-<img width="80" alt="Lombok image" src="https://github.com/user-attachments/assets/ed58df73-2c0f-4e4a-a421-c038d4a60fb2" />
-<img width="80" alt="MapStruct image" src="https://github.com/user-attachments/assets/e8166396-65e4-4a1a-a725-158371cc3a06" />
-
 - Spring Boot
 - Spring Data JPA
 - MySql
@@ -29,10 +21,23 @@ This project is a robust Spring Boot application designed to provide a secure us
 - Lombok
 - MapStruct
 
+<img width="80" alt="Spring Boot image" src="https://github.com/user-attachments/assets/9f9c00e7-67f5-402c-9c51-0fe42d81f8c4" />
+<img width="80" alt="Spring Data JPA image" src="https://github.com/user-attachments/assets/c4e065c9-0d16-4d1a-8294-e5b6a971fd4e" />
+<img width="80" alt="MySql image" src="https://github.com/user-attachments/assets/eab77bfb-fa00-4f39-a2b2-e185152e620a" />
+<img width="80" alt="Spring Security image" src="https://github.com/user-attachments/assets/669d73d0-f454-4c4f-a2ab-0f5ca3ff9ea3" />
+<img width="80" alt="JJWT image" src="https://github.com/user-attachments/assets/c42b78cd-247e-4787-9cd8-d93b48e0e9dc" />
+<img width="80" alt="Lombok image" src="https://github.com/user-attachments/assets/ed58df73-2c0f-4e4a-a421-c038d4a60fb2" />
+<img width="80" alt="MapStruct image" src="https://github.com/user-attachments/assets/e8166396-65e4-4a1a-a725-158371cc3a06" />
+
 #### Testing Tools
+- JUnit + Mockito
+- H2 Database
+
 <img width="80" alt="JUnit image" src="https://github.com/user-attachments/assets/4f24e420-20d5-4607-afd7-f249a3a7ae8a" />
 <img width="100" alt="Mockito image" src="https://github.com/user-attachments/assets/e2f3d467-b5cc-4367-8949-7dbe60bc1dfc" />
 <img width="80" alt="H2 image" src="https://github.com/user-attachments/assets/7a179686-ce60-4250-aea7-13b9dfecc5d7" />
 
-- JUnit + Mockito
-- H2 Database
+#### Devops
+- Docker
+
+<img width="80" alt="Docker image" src="https://github.com/user-attachments/assets/a45de7fe-6234-4734-be20-4efd48bd9207" />
