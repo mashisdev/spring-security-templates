@@ -8,6 +8,7 @@ import com.jwt.simple.user.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Slf4j
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
@@ -26,45 +28,72 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping("/me")
     public ResponseEntity<UserDto> findMeByEmail() {
-        String user = SecurityContextHolder.getContext().getAuthentication().getName();
-        return ResponseEntity.ok(userService.findByEmail(user));
+        String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Received request to get authenticated user's details for email: {}", authenticatedUserEmail);
+
+        UserDto userDto = userService.findByEmail(authenticatedUserEmail);
+        log.info("Successfully retrieved details for user: {}", authenticatedUserEmail);
+        return ResponseEntity.ok(userDto);
     }
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findById(id));
+        log.info("Received request to find user by ID: {}", id);
+
+        UserDto userDto = userService.findById(id);
+        log.info("Successfully retrieved user with ID: {}", id);
+        return ResponseEntity.ok(userDto);
     }
 
     @Override
     @GetMapping("/all")
     public ResponseEntity<List<UserDto>> findAll() {
-        return ResponseEntity.ok(userService.findAll());
+        log.info("Received request to find all users");
+
+        List<UserDto> users = userService.findAll();
+        log.info("Successfully retrieved all users. Total: {}", users.size());
+        return ResponseEntity.ok(users);
     }
 
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
-        UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        UserDto updatedUser = userService.findById(updateUserRequest.getId());
+        String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Received update request for user ID: {} from authenticated user: {}", id, authenticatedUserEmail);
+        UserDto currentUser = userService.findByEmail(authenticatedUserEmail);
+        UserDto targetUserInRequest = userService.findById(updateUserRequest.getId());
 
-        if (!currentUser.getId().equals(updatedUser.getId()) || !currentUser.getId().equals(id)) {
+        if (!currentUser.getId().equals(targetUserInRequest.getId()) || !currentUser.getId().equals(id)) {
+            log.warn("Authorization failed: User {} attempted to update user ID {} (target ID in request: {}). Not allowed.",
+                    authenticatedUserEmail, id, updateUserRequest.getId());
             throw new NotAllowedToChangeCredentialsException("Not allowed to change another user's credentials");
         }
+        log.debug("Authorization successful: User {} is allowed to update user ID {}.", authenticatedUserEmail, id);
 
-        return ResponseEntity.ok(userService.update(userMapper.updateUserRequestToUserDto(updateUserRequest)));
+        UserDto updatedUser = userService.update(userMapper.updateUserRequestToUserDto(updateUserRequest));
+        log.info("Successfully updated user with ID: {}", updatedUser.getId());
+        return ResponseEntity.ok(updatedUser);
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        UserDto currentUser = userService.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+        String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Received delete request for user ID: {} from authenticated user: {}", id, authenticatedUserEmail);
 
-        if (!currentUser.equals(userService.findById(id))) {
+        UserDto currentUser = userService.findByEmail(authenticatedUserEmail);
+        UserDto targetUserToDelete = userService.findById(id);
+
+        if (!currentUser.getId().equals(targetUserToDelete.getId())) {
+            log.warn("Authorization failed: User {} attempted to delete user ID {}. Not allowed.",
+                    authenticatedUserEmail, id);
             throw new NotAllowedToChangeCredentialsException("Not allowed to change another user's credentials");
         }
+        log.debug("Authorization successful: User {} is allowed to delete user ID {}.", authenticatedUserEmail, id);
 
         userService.delete(id);
+        log.info("Successfully deleted user with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
 }

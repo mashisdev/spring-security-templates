@@ -19,4 +19,8 @@ spring:
 logging:
   level:
     com.jwt.simple.config.SecurityConfig: DEBUG
+    com.jwt.simple.auth.AuthenticationService: DEBUG
+    com.jwt.simple.auth.AuthenticationController: INFO
+    com.jwt.simple.user.service.UserServiceImpl: DEBUG
+    com.jwt.simple.user.controller.UserControllerImpl: INFO
     root: INFO
