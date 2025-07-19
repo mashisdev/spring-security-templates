@@ -47,7 +47,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<UserDto>> findAll() {
         log.info("Received request to find all users");
 
