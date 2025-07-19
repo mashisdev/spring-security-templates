@@ -16,3 +16,7 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: 'true'
+logging:
+  level:
+    com.jwt.simple.config.SecurityConfig: DEBUG
+    root: INFO

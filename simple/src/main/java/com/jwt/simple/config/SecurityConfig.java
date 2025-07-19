@@ -1,6 +1,7 @@
 package com.jwt.simple.config;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,8 +21,8 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
     @Autowired
     private AuthenticationProvider authenticationProvider;
@@ -30,15 +31,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        log.info("Configuring the SecurityFilterChain.");
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .authorizeHttpRequests(auth -> {
+                    log.debug("Configuring HTTP request authorization rules.");
+
+                    auth.requestMatchers("/api/auth/**").permitAll();
+                    log.debug("Permitted unauthenticated access to /api/auth/**.");
+
+                    auth.anyRequest().authenticated();
+                    log.debug("Required authentication for all other requests.");
+                })
+                .sessionManagement(session -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    log.debug("Configured session management policy as STATELESS.");
+                })
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -46,13 +56,21 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        log.info("Configuring the CORS policy.");
         CorsConfiguration configuration = new CorsConfiguration();
+
         configuration.setAllowedOrigins(List.of("http://localhost:8080/"));
+        log.debug("Allowed CORS origins: {}", configuration.getAllowedOrigins());
+
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        log.debug("Allowed CORS methods: {}", configuration.getAllowedMethods());
+
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        log.debug("Allowed CORS headers: {}", configuration.getAllowedHeaders());
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        log.info("CORS configuration applied to all paths (/**).");
         return source;
     }
 
