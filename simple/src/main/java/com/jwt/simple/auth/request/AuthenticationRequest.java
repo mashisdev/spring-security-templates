@@ -17,7 +17,7 @@ public class AuthenticationRequest {
     @Email(message = "The given email does not match the pattern")
     private String email;
     @NotEmpty(message = "The password is mandatory")
-    @Length(min = 5, message = "The password should be at least of 5 characters of length")
+    @Length(min = 6, message = "The password should be at least of 6 characters of length")
     private String password;
 }
 

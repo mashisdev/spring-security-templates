@@ -21,25 +21,25 @@ public class GlobalExceptionHandler {
     // User Not Found
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("auth", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("authentication", ex.getMessage()));
     }
 
     // Registration
     @ExceptionHandler(UserAlreadyRegisteredException.class)
     public ResponseEntity<Map<String, String>> handleUserAlreadyRegistered(UserAlreadyRegisteredException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("auth", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("authentication", ex.getMessage()));
     }
 
     // Login
     @ExceptionHandler(WrongEmailOrPasswordException.class)
     public ResponseEntity<Map<String, String>> handleWrongEmailOrPassword(WrongEmailOrPasswordException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("auth", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Collections.singletonMap("authentication", ex.getMessage()));
     }
 
     // Not Allowed To Change Credentials
     @ExceptionHandler(NotAllowedToChangeCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleNotAllowedToChangeCredentials(NotAllowedToChangeCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("auth", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("authentication", ex.getMessage()));
     }
 
     // Method Not Valid
