@@ -15,7 +15,7 @@ spring:
         format_sql: 'true'
     hibernate:
       ddl-auto: update
-    show-sql: 'true'
+    show-sql: 'false'
 logging:
   level:
     com.jwt.simple.config.SecurityConfig: DEBUG
@@ -23,4 +23,5 @@ logging:
     com.jwt.simple.auth.AuthenticationController: INFO
     com.jwt.simple.user.service.UserServiceImpl: DEBUG
     com.jwt.simple.user.controller.UserControllerImpl: INFO
+    com.jwt.simple.config.JwtAuthFilter: DEBUG
     root: INFO

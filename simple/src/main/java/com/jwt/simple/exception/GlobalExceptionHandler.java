@@ -141,7 +141,6 @@ public class GlobalExceptionHandler {
 
     // Handles JWT Exceptions
     @ExceptionHandler({
-            ExpiredJwtException.class,
             MalformedJwtException.class,
             SignatureException.class,
             UnsupportedJwtException.class,
@@ -152,10 +151,6 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
 
         switch (ex) {
-            case ExpiredJwtException expiredJwtException -> {
-                message = "JWT Token has expired. Please log in again.";
-                log.warn("Expired JWT Token for path: {}. Error: {}", request.getRequestURI(), ex.getMessage(), ex);
-            }
             case MalformedJwtException malformedJwtException -> {
                 message = "JWT Token is malformed or invalid. Ensure it is correctly formatted.";
                 log.warn("Malformed JWT Token for path: {}. Error: {}", request.getRequestURI(), ex.getMessage(), ex);

@@ -118,7 +118,7 @@ class UserControllerTests {
 
         mockMvc.perform(get("/api/users/{id}", nonExistingId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.auth").value("User not found"));
+                .andExpect(jsonPath("$.authentication").value("User not found"));
 
         verify(userService, times(1)).findById(nonExistingId);
     }

@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()));
     }
 
     public boolean isTokenExpired(String token) {
@@ -69,12 +70,16 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts
-                .parserBuilder()
-                .setSigningKey(getSignInKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 
     private Key getSignInKey() {
@@ -89,10 +94,6 @@ public class JwtService {
             long currentTime = System.currentTimeMillis();
             return expiration.before(new Date(currentTime)) &&
                     expiration.getTime() + REFRESH_EXPIRATION > currentTime;
-        } catch (ExpiredJwtException e) {
-            Date expiration = e.getClaims().getExpiration();
-            long currentTime = System.currentTimeMillis();
-            return expiration.getTime() + REFRESH_EXPIRATION > currentTime;
         } catch (Exception e) {
             return false;
         }
