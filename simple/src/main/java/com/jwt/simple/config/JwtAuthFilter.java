@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -14,17 +15,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     protected void doFilterInternal(
@@ -46,7 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             final String userEmail = jwtService.extractUsername(jwt);
 
             if (userEmail == null || SecurityContextHolder.getContext().getAuthentication() != null) {
-                log.debug("The JWT doesn't contains a username");
+                log.debug("The JWT doesn't contain a username or user is already authenticated. Skipping authentication.");
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -58,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             boolean canBeRenewed = jwtService.canTokenBeRenewed(jwt);
 
             if (!isTokenValid || (isTokenExpired && !canBeRenewed)) {
-                log.debug("The JWT is not valid");
+                log.debug("The JWT is not valid or has expired and cannot be renewed. Clearing security context.");
                 SecurityContextHolder.clearContext();
                 filterChain.doFilter(request, response);
                 return;
@@ -81,9 +83,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authToken);
+            log.debug("User '{}' authenticated successfully.", userEmail);
 
         } catch (Exception e) {
-            log.error("Error processing JWT: {}", e.getMessage());
+            log.error("Error processing JWT: {}", e.getMessage(), e);
+            handlerExceptionResolver.resolveException(request, response, null, e);
+            return;
         }
 
         filterChain.doFilter(request, response);

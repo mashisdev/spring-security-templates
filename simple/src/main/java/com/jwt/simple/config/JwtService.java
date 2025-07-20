@@ -55,7 +55,7 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()));
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public boolean isTokenExpired(String token) {
@@ -67,19 +67,12 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        try {
-            return Jwts
-                    .parserBuilder()
-                    .setSigningKey(getSignInKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
-        } catch (ExpiredJwtException e) {
-            return e.getClaims();
-        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
-            throw new RuntimeException("Invalid JWT token or mal formed", e);
-        }
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key getSignInKey() {
@@ -94,6 +87,10 @@ public class JwtService {
             long currentTime = System.currentTimeMillis();
             return expiration.before(new Date(currentTime)) &&
                     expiration.getTime() + REFRESH_EXPIRATION > currentTime;
+        } catch (ExpiredJwtException e) {
+            Date expiration = e.getClaims().getExpiration();
+            long currentTime = System.currentTimeMillis();
+            return expiration.getTime() + REFRESH_EXPIRATION > currentTime;
         } catch (Exception e) {
             return false;
         }

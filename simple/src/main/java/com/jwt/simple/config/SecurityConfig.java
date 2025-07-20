@@ -23,10 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig {
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
-    @Autowired
-    private JwtAuthFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
+    private final JwtAuthFilter jwtAuthFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,6 +43,8 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                     log.debug("Required authentication for all other requests.");
                 })
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint))
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                     log.debug("Configured session management policy as STATELESS.");
