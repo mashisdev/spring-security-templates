@@ -4,7 +4,6 @@ import com.jwt.simple.exception.user.NotAllowedToChangeCredentialsException;
 import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
