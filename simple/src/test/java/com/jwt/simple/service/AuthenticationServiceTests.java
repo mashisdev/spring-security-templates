@@ -96,7 +96,7 @@ class AuthenticationServiceTests {
                 .build();
     }
 
-    // --- /register tests ---
+    // Register tests
 
     @Test
     void register_ShouldReturnAuthenticationResponse_WhenUserIsNotRegistered() {
@@ -139,7 +139,7 @@ class AuthenticationServiceTests {
     }
 
 
-    // --- /authenticate tests ---
+    // Authenticate tests
 
     @Test
     void authenticate_ShouldReturnAuthenticationResponse_WhenCredentialsAreCorrect() {
