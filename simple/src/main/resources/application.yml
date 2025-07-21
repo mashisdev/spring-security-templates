@@ -25,3 +25,26 @@ logging:
     com.jwt.simple.user.controller.UserControllerImpl: INFO
     com.jwt.simple.config.JwtAuthFilter: DEBUG
     root: INFO
+
+resilience4j.ratelimiter:
+  instances:
+    authRateLimiter:
+      limitForPeriod: 2
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
+
+    userRateLimiter:
+      limitForPeriod: 5
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
+
+resilience4j.timelimiter:
+  instances:
+    authTimeLimiter:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
+    userServiceTimeLimiter:
+      timeoutDuration: 3s
+      cancelRunningFuture: true

@@ -4,6 +4,7 @@ import com.jwt.simple.exception.user.NotAllowedToChangeCredentialsException;
 import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -200,6 +201,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 
+    // RateLimiter exception
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<ErrorMessage> handleRequestNotPermitted(RequestNotPermitted ex, HttpServletRequest request) {
+        log.warn("Rate limit exceeded: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(
+                HttpStatus.TOO_MANY_REQUESTS.value(),
+                ex,
+                "Too many requests. Please try again later.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+    }
 
     // Catch-all handler for any unexpected exceptions, returning 500 INTERNAL SERVER ERROR
     @ExceptionHandler(Exception.class)
