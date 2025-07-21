@@ -1,6 +1,7 @@
 package com.jwt.simple.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jwt.simple.exception.GlobalExceptionHandler;
 import com.jwt.simple.exception.user.UserNotFoundException;
 import com.jwt.simple.user.controller.UserControllerImpl;
 import com.jwt.simple.user.dto.UserDto;
@@ -15,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,19 +24,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
-import com.jwt.simple.exception.GlobalExceptionHandler;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -112,13 +103,15 @@ class UserControllerTests {
     }
 
     @Test
-    void shouldReturnOk_whenFindByIdIsCalledWithNonExistingId() throws Exception {
+    void shouldReturnNotFound_whenFindByIdIsCalledWithNonExistingId() throws Exception {
         long nonExistingId = 99L;
         when(userService.findById(nonExistingId)).thenThrow(new UserNotFoundException("User not found"));
 
         mockMvc.perform(get("/api/users/{id}", nonExistingId))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.authentication").value("User not found"));
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message").value("User not found"))
+                .andExpect(jsonPath("$.exception").value("UserNotFoundException"));
 
         verify(userService, times(1)).findById(nonExistingId);
     }
@@ -131,7 +124,7 @@ class UserControllerTests {
 
         when(userService.findAll()).thenReturn(userList);
 
-        mockMvc.perform(get("/api/users/all"))
+        mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[1].id").value(2L))
@@ -144,7 +137,7 @@ class UserControllerTests {
     void shouldReturnEmptyList_whenFindAllIsCalledAndNoUsersExist() throws Exception {
         when(userService.findAll()).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/users/all"))
+        mockMvc.perform(get("/api/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
 
@@ -192,10 +185,6 @@ class UserControllerTests {
 
         UserDto currentUserDto = UserDto.builder().id(currentUserId).firstname("Current").lastname("User").email(currentUserEmail).build();
 
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(currentUserEmail, "password")
-        );
-
         Long pathId = 2L;
 
         UpdateUserRequest requestBodyWithCurrentUserId = UpdateUserRequest.builder()
@@ -205,19 +194,25 @@ class UserControllerTests {
                 .email("test.user@example.com")
                 .build();
 
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(currentUserEmail, "password")
+        );
+
         when(userService.findByEmail(currentUserEmail)).thenReturn(currentUserDto);
-        when(userService.findById(currentUserId)).thenReturn(currentUserDto);
+        when(userService.findById(requestBodyWithCurrentUserId.getId())).thenReturn(currentUserDto);
 
         mockMvc.perform(put("/api/users/{id}", pathId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestBodyWithCurrentUserId)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.message").value("Not allowed to change another user's credentials"))
+                .andExpect(jsonPath("$.exception").value("NotAllowedToChangeCredentialsException"));
 
         verify(userService, times(1)).findByEmail(currentUserEmail);
-        verify(userService, times(1)).findById(currentUserId);
+        verify(userService, times(1)).findById(requestBodyWithCurrentUserId.getId());
         verify(userMapper, times(0)).updateUserRequestToUserDto(any(UpdateUserRequest.class));
         verify(userService, times(0)).update(any(UserDto.class));
-
     }
 
     @Test
@@ -255,7 +250,10 @@ class UserControllerTests {
         mockMvc.perform(put("/api/users/{id}", anotherUserId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestToUpdateAnotherUser)))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.message").value("Not allowed to change another user's credentials"))
+                .andExpect(jsonPath("$.exception").value("NotAllowedToChangeCredentialsException"));
 
         verify(userService, times(1)).findByEmail(currentUserEmail);
         verify(userService, times(1)).findById(anotherUserId);
@@ -263,6 +261,7 @@ class UserControllerTests {
         verify(userService, times(0)).update(any(UserDto.class));
     }
 
+    // DELETE method
     @Test
     void shouldDeleteUser_whenCurrentUserMatchesDeletedUser() throws Exception {
         Long currentUserId = 1L;
@@ -311,7 +310,10 @@ class UserControllerTests {
         when(userService.findById(anotherUserId)).thenReturn(anotherUserDto);
 
         mockMvc.perform(delete("/api/users/{id}", anotherUserId))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.message").value("Not allowed to change another user's credentials"))
+                .andExpect(jsonPath("$.exception").value("NotAllowedToChangeCredentialsException"));
 
         verify(userService, times(1)).findByEmail(currentUserEmail);
         verify(userService, times(1)).findById(anotherUserId);
