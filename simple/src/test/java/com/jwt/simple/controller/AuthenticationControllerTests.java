@@ -89,7 +89,7 @@ class AuthenticationControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.message").value("User already registered")); // Asumiendo que tu GlobalExceptionHandler mapea UserAlreadyRegisteredException a un JSON con campo 'message'
+                .andExpect(jsonPath("$.message").value("User already registered"));
     }
 
     @Test
@@ -106,7 +106,6 @@ class AuthenticationControllerTests {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
-
 
     // --- /api/auth/login ---
 
@@ -131,7 +130,7 @@ class AuthenticationControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(authenticationRequest)))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.message").value("Wrong email or password")); // Asumiendo que tu GlobalExceptionHandler mapea WrongEmailOrPasswordException a un JSON con campo 'message'
+                .andExpect(jsonPath("$.message").value("Wrong email or password"));
     }
 
     @Test

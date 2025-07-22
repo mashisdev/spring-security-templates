@@ -7,3 +7,16 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+
+resilience4j.ratelimiter:
+  instances:
+    authRateLimiter:
+      limitForPeriod: 1 # just 1 for testing
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
+    userRateLimiter:
+      limitForPeriod: 1 # just 1 for testing
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
