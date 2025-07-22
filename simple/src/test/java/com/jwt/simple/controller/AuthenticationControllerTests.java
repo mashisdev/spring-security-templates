@@ -7,6 +7,7 @@ import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.filter.JwtAuthFilter;
+import com.jwt.simple.config.filter.RateLimiterFilter;
 import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(    controllers = AuthenticationController.class,
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = JwtAuthFilter.class
+                classes = {JwtAuthFilter.class, RateLimiterFilter.class}
         ),excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 class AuthenticationControllerTests {
 
