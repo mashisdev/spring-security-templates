@@ -39,6 +39,7 @@ resilience4j.ratelimiter:
       timeoutDuration: 0s
       registerHealthIndicator: true
     apiRateLimiter:
-      limitForPeriod: 1
+      limitForPeriod: 5
       limitRefreshPeriod: 1s
       timeoutDuration: 0s
+      registerHealthIndicator: true

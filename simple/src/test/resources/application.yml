@@ -11,12 +11,17 @@ spring:
 resilience4j.ratelimiter:
   instances:
     authRateLimiter:
-      limitForPeriod: 1 # just 1 for testing
+      limitForPeriod: 2
       limitRefreshPeriod: 1s
       timeoutDuration: 0s
       registerHealthIndicator: true
     userRateLimiter:
-      limitForPeriod: 1 # just 1 for testing
+      limitForPeriod: 5
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
+    apiRateLimiter:
+      limitForPeriod: 5
       limitRefreshPeriod: 1s
       timeoutDuration: 0s
       registerHealthIndicator: true

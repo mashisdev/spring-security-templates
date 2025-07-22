@@ -46,8 +46,8 @@ public class RateLimiterFilter extends OncePerRequestFilter {
             String requestURI = request.getRequestURI();
             ErrorMessage errorMessage = new ErrorMessage(
                     HttpStatus.TOO_MANY_REQUESTS.value(),
-                    e, // La excepción RequestNotPermitted
-                    "Demasiadas peticiones. Por favor, inténtalo de nuevo más tarde.",
+                    e,
+                    "Too Many Requests. Please try again later.",
                     requestURI
             );
 
