@@ -1,5 +1,6 @@
-package com.jwt.simple.config;
+package com.jwt.simple.config.filter;
 
+import com.jwt.simple.config.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

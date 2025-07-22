@@ -33,18 +33,12 @@ resilience4j.ratelimiter:
       limitRefreshPeriod: 1s
       timeoutDuration: 0s
       registerHealthIndicator: true
-
     userRateLimiter:
       limitForPeriod: 5
       limitRefreshPeriod: 1s
       timeoutDuration: 0s
       registerHealthIndicator: true
-
-resilience4j.timelimiter:
-  instances:
-    authTimeLimiter:
-      timeoutDuration: 2s
-      cancelRunningFuture: true
-    userServiceTimeLimiter:
-      timeoutDuration: 3s
-      cancelRunningFuture: true
+    apiRateLimiter:
+      limitForPeriod: 1
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
