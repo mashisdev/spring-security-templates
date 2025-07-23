@@ -23,7 +23,7 @@ logging:
     com.jwt.simple.auth.AuthenticationController: INFO
     com.jwt.simple.user.service.UserServiceImpl: DEBUG
     com.jwt.simple.user.controller.UserControllerImpl: INFO
-    com.jwt.simple.config.JwtAuthFilter: DEBUG
+    com.jwt.simple.config.filter.JwtAuthFilter: DEBUG
     root: INFO
 
 resilience4j.ratelimiter:
