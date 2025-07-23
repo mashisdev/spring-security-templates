@@ -4,7 +4,7 @@ import com.jwt.roles.exception.user.NotAllowedToChangeCredentialsException;
 import com.jwt.roles.exception.user.UserAlreadyRegisteredException;
 import com.jwt.roles.exception.user.UserNotFoundException;
 import com.jwt.roles.exception.user.WrongEmailOrPasswordException;
-//import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -201,18 +202,31 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(error);
     }
 
+    // Handler for AuthorizationDeniedException (Access Denied)
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorMessage> handleAuthorizationDeniedException(AuthorizationDeniedException ex, HttpServletRequest request) {
+        log.warn("Authorization denied for user accessing path: {} with message: {}", request.getRequestURI(), ex.getMessage(), ex);
+        ErrorMessage error = new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(), // 403 Forbidden
+                ex,
+                "Access Denied. You do not have sufficient permissions to access this resource.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
     // RateLimiter exception
-//    @ExceptionHandler(RequestNotPermitted.class)
-//    public ResponseEntity<ErrorMessage> handleRequestNotPermitted(RequestNotPermitted ex, HttpServletRequest request) {
-//        log.warn("Rate limit exceeded: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
-//        ErrorMessage error = new ErrorMessage(
-//                HttpStatus.TOO_MANY_REQUESTS.value(),
-//                ex,
-//                "Too many requests. Please try again later.",
-//                request.getRequestURI()
-//        );
-//        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
-//    }
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<ErrorMessage> handleRequestNotPermitted(RequestNotPermitted ex, HttpServletRequest request) {
+        log.warn("Rate limit exceeded: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(
+                HttpStatus.TOO_MANY_REQUESTS.value(),
+                ex,
+                "Too many requests. Please try again later.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error);
+    }
 
     // Catch-all handler for any unexpected exceptions, returning 500 INTERNAL SERVER ERROR
     @ExceptionHandler(Exception.class)
