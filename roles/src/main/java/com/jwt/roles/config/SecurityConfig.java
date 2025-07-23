@@ -1,7 +1,7 @@
 package com.jwt.roles.config;
 
 import com.jwt.roles.config.filter.JwtAuthFilter;
-//import com.jwt.roles.config.filter.RateLimiterFilter;
+import com.jwt.roles.config.filter.RateLimiterFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +26,7 @@ import java.util.List;
 public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthFilter jwtAuthFilter;
+    private final RateLimiterFilter rateLimiterFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
@@ -51,7 +52,7 @@ public class SecurityConfig {
                     log.debug("Configured session management policy as STATELESS.");
                 })
                 .authenticationProvider(authenticationProvider)
-//                .addFilterBefore(rateLimiterFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(rateLimiterFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

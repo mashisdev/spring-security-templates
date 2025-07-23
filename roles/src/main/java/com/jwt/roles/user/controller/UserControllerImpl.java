@@ -6,7 +6,7 @@ import com.jwt.roles.user.entity.Role;
 import com.jwt.roles.user.mapper.UserMapper;
 import com.jwt.roles.user.request.UpdateUserRequest;
 import com.jwt.roles.user.service.UserService;
-//import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/me")
-//    @RateLimiter(name = "userRateLimiter")
+    @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> findMeByEmail() {
         String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Received request to get authenticated user's details for email: {}", authenticatedUserEmail);
@@ -39,7 +39,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping("/{id}")
-//    @RateLimiter(name = "userRateLimiter")
+    @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
         log.info("Received request to find user by ID: {}", id);
 
@@ -50,7 +50,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping()
-//    @RateLimiter(name = "userRateLimiter")
+    @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<List<UserDto>> findAll() {
         log.info("Received request to find all users");
 
@@ -61,7 +61,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping("/{id}")
-//    @RateLimiter(name = "userRateLimiter")
+    @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
         String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Received update request for user ID: {} from authenticated user: {}", id, authenticatedUserEmail);
@@ -85,7 +85,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @DeleteMapping("/{id}")
-//    @RateLimiter(name = "userRateLimiter")
+    @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         String authenticatedUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Received delete request for user ID: {} from authenticated user: {}", id, authenticatedUserEmail);
