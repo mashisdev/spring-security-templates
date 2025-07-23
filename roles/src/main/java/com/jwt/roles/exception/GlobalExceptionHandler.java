@@ -207,7 +207,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessage> handleAuthorizationDeniedException(AuthorizationDeniedException ex, HttpServletRequest request) {
         log.warn("Authorization denied for user accessing path: {} with message: {}", request.getRequestURI(), ex.getMessage(), ex);
         ErrorMessage error = new ErrorMessage(
-                HttpStatus.FORBIDDEN.value(), // 403 Forbidden
+                HttpStatus.FORBIDDEN.value(),
                 ex,
                 "Access Denied. You do not have sufficient permissions to access this resource.",
                 request.getRequestURI()

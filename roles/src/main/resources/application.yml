@@ -25,6 +25,7 @@ logging:
     com.jwt.roles.user.service.UserServiceImpl: DEBUG
     com.jwt.roles.user.controller.UserControllerImpl: DEBUG
     com.jwt.roles.config.filter.JwtAuthFilter: DEBUG
+    com.jwt.roles.exception.GlobalExceptionHandler: DEBUG
     root: INFO
 
 resilience4j.ratelimiter:
