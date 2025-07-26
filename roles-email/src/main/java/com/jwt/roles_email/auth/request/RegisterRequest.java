@@ -1,4 +1,4 @@
-package com.jwt.roles_email.request;
+package com.jwt.roles_email.auth.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
