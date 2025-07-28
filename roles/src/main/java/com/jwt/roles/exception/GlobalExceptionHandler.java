@@ -16,6 +16,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -75,6 +77,25 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    // Handles HttpMediaTypeNotSupportedException, returning 415 UNSUPPORTED MEDIA TYPE.
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorMessage> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
+        String supportedMediaTypes = ex.getSupportedMediaTypes().stream()
+                .map(mediaType -> "'" + mediaType.toString() + "'")
+                .collect(Collectors.joining(", "));
+        String message = String.format("Content type '%s' not supported. Supported media types are: %s",
+                ex.getContentType(), supportedMediaTypes);
+        log.warn("Unsupported Media Type: {} for path: {}. Supported types: {}", ex.getContentType(), request.getRequestURI(), supportedMediaTypes, ex);
+
+        ErrorMessage error = new ErrorMessage(
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE.value(),
+                ex,
+                message,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(error);
     }
 
     // Handles HttpRequestMethodNotSupportedException, returning 405 METHOD NOT ALLOWED
