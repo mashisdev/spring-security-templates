@@ -70,8 +70,8 @@ public class UserServiceImpl implements UserService {
         log.debug("Existing user found for ID: {}", userDto.getId());
 
         BeanUtils.copyProperties(userMapper.userDtoToUser(userDto), existingUser,
-                "password", "enabled", "verificationCode", "verificationCodeExpiresAt");
-        log.debug("Properties copied for user ID: {}. Excluding password, enabled, verificationCode and verificationCodeExpiresAt.", userDto.getId());
+                "password", "enabled", "verificationCode", "verificationCodeExpiresAt", "resetToken", "resetTokenExpiration");
+        log.debug("Properties copied for user ID: {}. Excluding password, enabled, verificationCode, verificationCodeExpiresAt, resetToken, resetTokenExpiration.", userDto.getId());
 
         User updatedUser = userRepository.save(existingUser);
         log.info("User with ID: {} updated successfully.", updatedUser.getId());

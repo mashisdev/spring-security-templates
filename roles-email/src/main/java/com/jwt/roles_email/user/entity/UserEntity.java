@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +53,12 @@ public class UserEntity implements UserDetails {
     private Integer verificationCode;
     @Column(name = "verification_expiration")
     private LocalDateTime verificationCodeExpiresAt;
+
+    // Password reset
+    @Column(name = "reset_token")
+    private String resetToken;
+    @Column(name = "reset_token_expiration")
+    private Instant resetTokenExpiration;
 
     @Override
     public boolean isEnabled() {

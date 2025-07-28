@@ -3,6 +3,7 @@ package com.jwt.roles_email.user.entity;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,4 +18,6 @@ public class User {
     private boolean enabled;
     private LocalDateTime verificationCodeExpiresAt;
     private Integer verificationCode;
+    private String resetToken;
+    private Instant resetTokenExpiration;
 }

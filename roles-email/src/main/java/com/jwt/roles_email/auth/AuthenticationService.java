@@ -59,6 +59,10 @@ public class AuthenticationService {
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(30));
         log.debug("Verification code generated and set for user {}. Code expires at: {}", user.getEmail(), user.getVerificationCodeExpiresAt());
 
+        user.setResetToken(null);
+        user.setResetTokenExpiration(null);
+        log.debug("Reset token and its expiration set to null for new user: {}", user.getEmail());
+
         log.debug("Attempting to send verification email to user: {}", user.getEmail());
         sendVerificationEmail(user);
         log.debug("Verification email sent successfully to user: {}", user.getEmail());
