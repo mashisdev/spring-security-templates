@@ -1,6 +1,5 @@
 package com.jwt.roles_email.auth.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
 public record VerifyRequest (

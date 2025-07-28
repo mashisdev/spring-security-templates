@@ -1,8 +1,8 @@
 package com.jwt.roles_email.user.repository;
 
-import com.jwt.roles_email.user.mapper.UserMapper;
 import com.jwt.roles_email.user.entity.User;
 import com.jwt.roles_email.user.entity.UserEntity;
+import com.jwt.roles_email.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

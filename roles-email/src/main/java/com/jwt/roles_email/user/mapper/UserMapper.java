@@ -4,7 +4,7 @@ import com.jwt.roles_email.auth.request.RegisterRequest;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.User;
 import com.jwt.roles_email.user.entity.UserEntity;
-//import com.jwt.roles_email.user.request.UpdateUserRequest;
+import com.jwt.roles_email.user.request.UpdateUserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
@@ -24,6 +24,6 @@ public interface UserMapper {
     // RegisterRequest -> User
     User registerRequestToUser(RegisterRequest registerRequest);
 
-//    // UpdateUserRequest -> UserDto
-//    UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest);
+    // UpdateUserRequest -> UserDto
+    UserDto updateUserRequestToUserDto(UpdateUserRequest updateUserRequest);
 }
