@@ -14,39 +14,39 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    private final SpringJpaRepository springJpaRepository;
+    private final UserJpaRepository userJpaRepository;
     private final UserMapper userMapper;
 
     @Override
     public User save(User userEntity) {
         UserEntity entity = userMapper.userToUserEntity(userEntity);
-        UserEntity saved = springJpaRepository.save(entity);
+        UserEntity saved = userJpaRepository.save(entity);
         return userMapper.userEntityToUser(saved);
     }
 
     @Override
     public Optional<User> findById(UUID id) {
-        return springJpaRepository.findById(id).map(userMapper::userEntityToUser);
+        return userJpaRepository.findById(id).map(userMapper::userEntityToUser);
     }
 
     @Override
     public List<User> findAll() {
-        return springJpaRepository.findAll().stream().map(userMapper::userEntityToUser).toList();
+        return userJpaRepository.findAll().stream().map(userMapper::userEntityToUser).toList();
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return springJpaRepository.findByEmail(email).map(userMapper::userEntityToUser);
+        return userJpaRepository.findByEmail(email).map(userMapper::userEntityToUser);
     }
 
     @Override
     public Boolean existsByEmail(String email) {
-        return springJpaRepository.existsByEmail(email);
+        return userJpaRepository.existsByEmail(email);
     }
 
     @Override
     public void deleteById(UUID id) {
-        springJpaRepository.deleteById(id);
+        userJpaRepository.deleteById(id);
     }
 
 }

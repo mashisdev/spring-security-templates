@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: roles-email
+
+resilience4j.ratelimiter:
+  instances:
+    apiRateLimiter:
+      limitForPeriod: 5
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0s
+      registerHealthIndicator: true
+#    authRateLimiter:
+#      limitForPeriod: 2
+#      limitRefreshPeriod: 1s
+#      timeoutDuration: 0s
+#      registerHealthIndicator: true
+#    userRateLimiter:
+#      limitForPeriod: 5
+#      limitRefreshPeriod: 1s
+#      timeoutDuration: 0s
+#      registerHealthIndicator: true
