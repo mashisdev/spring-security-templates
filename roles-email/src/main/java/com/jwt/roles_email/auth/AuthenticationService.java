@@ -1,23 +1,25 @@
 package com.jwt.roles_email.auth;
 
+import com.jwt.roles_email.auth.request.AuthenticationRequest;
 import com.jwt.roles_email.auth.request.VerifyRequest;
+import com.jwt.roles_email.auth.response.AuthenticationResponse;
 import com.jwt.roles_email.config.service.EmailService;
 import com.jwt.roles_email.config.service.JwtService;
 import com.jwt.roles_email.exception.user.UserAlreadyRegisteredException;
 import com.jwt.roles_email.exception.user.UserNotFoundException;
-import com.jwt.roles_email.exception.validation.AccountAlreadyVerifiedException;
-import com.jwt.roles_email.exception.validation.InvalidVerificationCodeException;
-import com.jwt.roles_email.exception.validation.VerificationCodeExpiredException;
-import com.jwt.roles_email.exception.validation.VerificationCodeStillValidException;
+import com.jwt.roles_email.exception.user.WrongEmailOrPasswordException;
+import com.jwt.roles_email.exception.validation.*;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.Role;
 import com.jwt.roles_email.user.entity.User;
+import com.jwt.roles_email.user.entity.UserEntity;
 import com.jwt.roles_email.user.mapper.UserMapper;
 import com.jwt.roles_email.user.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -141,39 +143,44 @@ public class AuthenticationService {
         log.info("Verification code successfully re-sent for user: {}", user.getEmail());
     }
 
-//    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-//        log.info("Attempting to authenticate user with email: {}", request.email());
-//
-//        Optional<User> userOptional = userRepository.findByEmail(request.email());
-//        if (userOptional.isEmpty()) {
-//            log.warn("Authentication failed: User with email {} not found.", request.email());
-//            throw new WrongEmailOrPasswordException("Wrong email or password");
-//        }
-//        User user = userOptional.get();
-//        log.debug("User found for email: {}", user.getEmail());
-//
-//        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-//            log.warn("Authentication failed: Password mismatch for user {}.", request.email());
-//            throw new WrongEmailOrPasswordException("Wrong email or password");
-//        }
-//        log.debug("Password matched for user: {}", user.getEmail());
-//
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        request.email(),
-//                        request.password()
-//                )
-//        );
-//        log.info("User {} authenticated successfully via AuthenticationManager.", request.email());
-//
-//        String jwtToken = jwtService.generateToken(userMapper.userToUserEntity(user));
-//        log.debug("JWT token generated for authenticated user: {}", user.getEmail());
-//
-//        return AuthenticationResponse.builder()
-//                .token(jwtToken)
-//                .build();
-//
-//    }
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        log.info("Attempting to authenticate user with email: {}", request.email());
+
+        User user = userRepository.findByEmail(request.email())
+                .orElseThrow(() -> {
+                    log.warn("Authentication failed for email {}: User not found.", request.email());
+                    return new WrongEmailOrPasswordException("Wrong email or password");
+                });
+        log.debug("User found for email: {}. Proceeding with password verification.", user.getEmail());
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            log.warn("Authentication failed for user {}: Incorrect password provided.", user.getEmail());
+            throw new WrongEmailOrPasswordException("Wrong email or password");
+        }
+        log.debug("Password matched for user: {}.", user.getEmail());
+
+        if (!user.isEnabled()) {
+            log.warn("Authentication failed for user {}: Account not verified.", user.getEmail());
+            throw new AccountNotVerifiedException("Account not verified. Please verify your account.");
+        }
+        log.debug("Account for user {} is enabled. Proceeding with Spring Security authentication.", user.getEmail());
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
+        log.info("User {} authenticated successfully via AuthenticationManager.", request.email());
+
+        UserEntity userEntity = userMapper.userToUserEntity(user);
+        log.debug("Mapped internal User model to Spring Security UserDetails for token generation for user: {}", user.getEmail());
+
+        String jwtToken = jwtService.generateToken(userEntity);
+        log.info("JWT token generated successfully for user: {}. Authentication process completed.", user.getEmail());
+
+        return AuthenticationResponse.builder().token(jwtToken).build();
+    }
 
     private void sendVerificationEmail(User user) {
         String subject = "Jwt Email Account Verification";

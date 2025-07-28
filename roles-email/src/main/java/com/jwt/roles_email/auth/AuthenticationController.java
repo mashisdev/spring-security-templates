@@ -54,20 +54,21 @@ public class AuthenticationController {
     }
 
     @PostMapping("/resend")
+    @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<Map<String, String> > resendVerificationCode(@RequestBody @Valid VerifyRequest verifyRequest) {
         authenticationService.resendVerificationCode(verifyRequest);
         Map<String, String> response = Collections.singletonMap("verification", "Verification code sent");
         return ResponseEntity.ok(response);
     }
 
-//    @PostMapping("/login")
-////    @RateLimiter(name = "authRateLimiter")
-//    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
-//        log.info("Received login request for email: {}", request.email());
-//
-//        AuthenticationResponse response = authenticationService.authenticate(request);
-//        log.info("User logged in successfully. Returning authentication token.");
-//        return ResponseEntity.ok(response);
-//    }
+    @PostMapping("/login")
+    @RateLimiter(name = "authRateLimiter")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
+        log.info("Received login request for email: {}", request.email());
+
+        AuthenticationResponse response = authenticationService.authenticate(request);
+        log.info("User logged in successfully. Returning authentication token.");
+        return ResponseEntity.ok(response);
+    }
 
 }
