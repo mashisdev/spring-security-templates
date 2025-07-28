@@ -4,6 +4,7 @@ import com.jwt.roles_email.exception.user.NotAllowedToChangeCredentialsException
 import com.jwt.roles_email.exception.user.UserAlreadyRegisteredException;
 import com.jwt.roles_email.exception.user.UserNotFoundException;
 import com.jwt.roles_email.exception.user.WrongEmailOrPasswordException;
+import com.jwt.roles_email.exception.validation.*;
 import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -31,6 +32,8 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    // --- User Account Exception Handlers ---
 
     // Handles UserNotFoundException, returning 404 NOT FOUND
     @ExceptionHandler(UserNotFoundException.class)
@@ -75,6 +78,47 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    // --- Account Verification Exception Handlers ---
+    // Handles AccountNotVerifiedException, returning 403 FORBIDDEN.
+    @ExceptionHandler(AccountNotVerifiedException.class)
+    public ResponseEntity<ErrorMessage> handleAccountNotVerified(AccountNotVerifiedException ex, HttpServletRequest request) {
+        log.warn("Account not verified: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.FORBIDDEN.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    // Handles InvalidVerificationCodeException, returning 400 BAD REQUEST.
+    @ExceptionHandler(InvalidVerificationCodeException.class)
+    public ResponseEntity<ErrorMessage> handleInvalidVerificationCode(InvalidVerificationCodeException ex, HttpServletRequest request) {
+        log.warn("Invalid verification code: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.BAD_REQUEST.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    // Handles VerificationCodeExpiredException, returning 410 GONE.
+    @ExceptionHandler(VerificationCodeExpiredException.class)
+    public ResponseEntity<ErrorMessage> handleVerificationCodeExpired(VerificationCodeExpiredException ex, HttpServletRequest request) {
+        log.warn("Verification code expired: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.GONE.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.GONE).body(error);
+    }
+
+    // Handles AccountAlreadyVerifiedException, returning 409 CONFLICT.
+    @ExceptionHandler(AccountAlreadyVerifiedException.class)
+    public ResponseEntity<ErrorMessage> handleAccountAlreadyVerified(AccountAlreadyVerifiedException ex, HttpServletRequest request) {
+        log.warn("Account already verified: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.CONFLICT.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    // Handles VerificationCodeStillValidException, returning 409 CONFLICT.
+    @ExceptionHandler(VerificationCodeStillValidException.class)
+    public ResponseEntity<ErrorMessage> handleVerificationCodeStillValid(VerificationCodeStillValidException ex, HttpServletRequest request) {
+        log.warn("Verification code still valid: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.CONFLICT.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     // Handles HttpRequestMethodNotSupportedException, returning 405 METHOD NOT ALLOWED
