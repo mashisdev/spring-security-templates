@@ -53,6 +53,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/resend")
+    public ResponseEntity<Map<String, String> > resendVerificationCode(@RequestBody @Valid VerifyRequest verifyRequest) {
+        authenticationService.resendVerificationCode(verifyRequest);
+        Map<String, String> response = Collections.singletonMap("verification", "Verification code sent");
+        return ResponseEntity.ok(response);
+    }
+
 //    @PostMapping("/login")
 ////    @RateLimiter(name = "authRateLimiter")
 //    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {

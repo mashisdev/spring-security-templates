@@ -8,6 +8,7 @@ import com.jwt.roles_email.exception.user.UserNotFoundException;
 import com.jwt.roles_email.exception.validation.AccountAlreadyVerifiedException;
 import com.jwt.roles_email.exception.validation.InvalidVerificationCodeException;
 import com.jwt.roles_email.exception.validation.VerificationCodeExpiredException;
+import com.jwt.roles_email.exception.validation.VerificationCodeStillValidException;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.Role;
 import com.jwt.roles_email.user.entity.User;
@@ -101,6 +102,43 @@ public class AuthenticationService {
         userRepository.save(user);
 
         log.info("User {} account verified successfully.", user.getEmail());
+    }
+
+    public void resendVerificationCode(VerifyRequest verifyRequest) {
+        log.info("Attempting to resend verification code for user with email: {}", verifyRequest.email());
+
+        Optional<User> optionalUser = userRepository.findByEmail(verifyRequest.email());
+
+        if (optionalUser.isEmpty()) {
+            log.warn("Resend verification code failed: User with email {} not found.", verifyRequest.email());
+            throw new UserNotFoundException("User not found");
+        }
+
+        User user = optionalUser.get();
+        log.debug("User found for email: {}. Proceeding with resend checks.", user.getEmail());
+
+        if (user.isEnabled()) {
+            log.warn("Resend verification code failed: Account for user {} is already verified. No need to resend code.", user.getEmail());
+            throw new AccountAlreadyVerifiedException("Account is already verified");
+        }
+
+        if (user.getVerificationCodeExpiresAt() != null && user.getVerificationCodeExpiresAt().isAfter(LocalDateTime.now())) {
+            log.warn("Resend verification code failed for user {}: Current verification code is still valid and not expired yet (expires at {}).",
+                    user.getEmail(), user.getVerificationCodeExpiresAt());
+            throw new VerificationCodeStillValidException("Current verification code is still valid");
+        }
+        log.debug("Current verification code for user {} is expired or not set. Generating a new one.", user.getEmail());
+
+        user.setVerificationCode(generateVerificationCode());
+        user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(30));
+        log.debug("New verification code generated and set for user {}. It will expire at: {}", user.getEmail(), user.getVerificationCodeExpiresAt());
+
+        log.debug("Attempting to send new verification email to user: {}", user.getEmail());
+        sendVerificationEmail(user);
+        log.debug("New verification email sent successfully to user: {}", user.getEmail());
+
+        userRepository.save(user);
+        log.info("Verification code successfully re-sent for user: {}", user.getEmail());
     }
 
 //    public AuthenticationResponse authenticate(AuthenticationRequest request) {
