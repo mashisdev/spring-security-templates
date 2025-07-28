@@ -1,8 +1,13 @@
 package com.jwt.roles_email.auth;
 
+import com.jwt.roles_email.auth.request.VerifyRequest;
 import com.jwt.roles_email.config.service.EmailService;
 import com.jwt.roles_email.config.service.JwtService;
 import com.jwt.roles_email.exception.user.UserAlreadyRegisteredException;
+import com.jwt.roles_email.exception.user.UserNotFoundException;
+import com.jwt.roles_email.exception.validation.AccountAlreadyVerifiedException;
+import com.jwt.roles_email.exception.validation.InvalidVerificationCodeException;
+import com.jwt.roles_email.exception.validation.VerificationCodeExpiredException;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.Role;
 import com.jwt.roles_email.user.entity.User;
@@ -16,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -58,6 +64,43 @@ public class AuthenticationService {
         log.info("User {} registered successfully with ID: {}", saved.getEmail(), saved.getId());
 
         return userMapper.userToUserDto(saved);
+    }
+
+    public void verify(VerifyRequest verifyRequest) {
+        log.info("Attempting to verify user with email: {}", verifyRequest.email());
+
+        Optional<User> optionalUser = userRepository.findByEmail(verifyRequest.email());
+        if (optionalUser.isEmpty()) {
+            log.warn("Verification failed: User with email {} not found.", verifyRequest.email());
+            throw new UserNotFoundException("User not found");
+        }
+
+        User user = optionalUser.get();
+        log.debug("User found for email: {}. Proceeding with verification checks.", user.getEmail());
+
+        if (user.isEnabled()) {
+            log.warn("Verification failed: Account for user {} is already verified.", user.getEmail());
+            throw new AccountAlreadyVerifiedException("Account is already verified");
+        }
+
+        if (!user.getVerificationCode().equals(verifyRequest.verificationCode())) {
+            log.warn("Verification failed for user {}: Invalid verification code provided.", user.getEmail());
+            throw new InvalidVerificationCodeException("Invalid verification code");
+        }
+        log.debug("Verification code matched for user: {}", user.getEmail());
+
+        if (user.getVerificationCodeExpiresAt().isBefore(LocalDateTime.now())) {
+            log.warn("Verification failed for user {}: Verification code has expired.", user.getEmail());
+            throw new VerificationCodeExpiredException("Verification code has expired");
+        }
+        log.debug("Verification code for user {} is still valid.", user.getEmail());
+
+        user.setEnabled(true);
+        user.setVerificationCode(null);
+        user.setVerificationCodeExpiresAt(null);
+        userRepository.save(user);
+
+        log.info("User {} account verified successfully.", user.getEmail());
     }
 
 //    public AuthenticationResponse authenticate(AuthenticationRequest request) {

@@ -11,6 +11,6 @@ public record VerifyRequest (
     @NotNull(message = "Verification code is required")
     @Min(value = 100000, message = "Verification code must be a 6-digit number")
     @Max(value = 999999, message = "Verification code must be a 6-digit number")
-    @JsonProperty("verification_code")
+//    @JsonProperty("verification_code")
     Integer verificationCode
 ){}

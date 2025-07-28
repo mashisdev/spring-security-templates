@@ -2,6 +2,7 @@ package com.jwt.roles_email.auth;
 
 import com.jwt.roles_email.auth.request.AuthenticationRequest;
 import com.jwt.roles_email.auth.request.RegisterRequest;
+import com.jwt.roles_email.auth.request.VerifyRequest;
 import com.jwt.roles_email.auth.response.AuthenticationResponse;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.User;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -40,6 +43,14 @@ public class AuthenticationController {
 
         URI location = URI.create("/api/users/" + response.getId());
         return ResponseEntity.created(location).body(response);
+    }
+
+    @PostMapping("/verify")
+    @RateLimiter(name = "authRateLimiter")
+    public ResponseEntity<Map<String, String>> verify(@RequestBody @Valid VerifyRequest verifyRequest) {
+        authenticationService.verify(verifyRequest);
+        Map<String, String> response = Collections.singletonMap("verification", "Account verified successfully");
+        return ResponseEntity.ok(response);
     }
 
 //    @PostMapping("/login")
