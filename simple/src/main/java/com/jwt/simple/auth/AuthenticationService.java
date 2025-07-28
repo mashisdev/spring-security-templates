@@ -29,11 +29,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
 
-    public AuthenticationResponse register(RegisterRequest request) {
-        log.info("Attempting to register new user with email: {}", request.getEmail());
-
-        User user = userMapper.registerRequestToUser(request);
-        log.debug("Mapped RegisterRequest to User object for email: {}", user.getEmail());
+    public AuthenticationResponse register(User user) {
+        log.info("Attempting to register new user with email: {}", user.getEmail());
 
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             log.warn("Registration failed: User with email {} is already registered.", user.getEmail());

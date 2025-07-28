@@ -113,7 +113,7 @@ public class AuthenticationService {
         try {
             emailService.sendVerificationEmail(user.getEmail(), subject, htmlMessage);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            log.error("Failed to send verification email to user: {}. Error: {}", user.getEmail(), e.getMessage(), e);
         }
     }
 

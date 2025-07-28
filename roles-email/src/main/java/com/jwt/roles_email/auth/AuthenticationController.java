@@ -28,7 +28,7 @@ public class AuthenticationController {
     private final UserMapper userMapper;
 
     @PostMapping("/register")
-//    @RateLimiter(name = "authRateLimiter")
+    @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<UserDto> register(@RequestBody @Valid RegisterRequest request) {
         log.info("Received registration request for email: {}", request.email());
 
