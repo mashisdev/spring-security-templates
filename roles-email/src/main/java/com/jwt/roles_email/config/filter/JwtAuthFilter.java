@@ -1,6 +1,6 @@
 package com.jwt.roles_email.config.filter;
 
-import com.jwt.roles_email.config.JwtService;
+import com.jwt.roles_email.config.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

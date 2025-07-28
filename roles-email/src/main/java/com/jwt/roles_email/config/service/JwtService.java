@@ -1,4 +1,4 @@
-package com.jwt.roles_email.config;
+package com.jwt.roles_email.config.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

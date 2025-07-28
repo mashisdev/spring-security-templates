@@ -1,12 +1,8 @@
 package com.jwt.roles_email.auth;
 
-import com.jwt.roles_email.auth.request.AuthenticationRequest;
-import com.jwt.roles_email.auth.request.RegisterRequest;
-import com.jwt.roles_email.auth.response.AuthenticationResponse;
-import com.jwt.roles_email.config.EmailService;
-import com.jwt.roles_email.config.JwtService;
+import com.jwt.roles_email.config.service.EmailService;
+import com.jwt.roles_email.config.service.JwtService;
 import com.jwt.roles_email.exception.user.UserAlreadyRegisteredException;
-import com.jwt.roles_email.exception.user.WrongEmailOrPasswordException;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.Role;
 import com.jwt.roles_email.user.entity.User;
@@ -16,12 +12,10 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
