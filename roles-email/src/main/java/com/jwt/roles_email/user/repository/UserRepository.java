@@ -4,13 +4,12 @@ import com.jwt.roles_email.user.entity.User;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface UserRepository {
 
     User save(User userEntity);
 
-    Optional<User> findById(UUID id);
+    Optional<User> findById(Long id);
 
     List<User> findAll();
 
@@ -18,5 +17,5 @@ public interface UserRepository {
 
     Boolean existsByEmail(String email);
 
-    void deleteById(UUID id);
+    void deleteById(Long id);
 }

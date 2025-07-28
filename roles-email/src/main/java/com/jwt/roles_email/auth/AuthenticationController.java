@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -35,7 +37,9 @@ public class AuthenticationController {
 
         UserDto response = authenticationService.register(user);
         log.info("User registered successfully. Returning authentication token.");
-        return ResponseEntity.created(response);
+
+        URI location = URI.create("/api/users/" + response.getId());
+        return ResponseEntity.created(location).body(response);
     }
 
 //    @PostMapping("/login")

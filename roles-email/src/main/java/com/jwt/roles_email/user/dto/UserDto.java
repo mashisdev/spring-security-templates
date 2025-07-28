@@ -8,11 +8,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-public record UserDto (
-        Long id,
-        String firstname,
-        String lastname,
-        String email,
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDto {
+        private Long id;
+        private String firstname;
+        private String lastname;
+        private String email;
         @Enumerated(EnumType.STRING)
-        Role role
-) {}
+        private Role role;
+}

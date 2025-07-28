@@ -54,10 +54,10 @@ public class AuthenticationService {
         sendVerificationEmail(user);
         log.debug("Verification email sent successfully to user: {}", user.getEmail());
 
-        userRepository.save(user);
-        log.info("User {} registered successfully with ID: {}", user.getEmail(), user.getId());
+        User saved = userRepository.save(user);
+        log.info("User {} registered successfully with ID: {}", saved.getEmail(), saved.getId());
 
-        return userMapper.userToUserDto(user);
+        return userMapper.userToUserDto(saved);
     }
 
 //    public AuthenticationResponse authenticate(AuthenticationRequest request) {
