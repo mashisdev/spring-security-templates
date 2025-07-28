@@ -1,6 +1,43 @@
 spring:
   application:
     name: roles-email
+  main:
+    banner-mode: "off"
+  mail:
+    host: smtp.gmail.com
+    username: ${SUPPORT_EMAIL}
+    password: ${SUPPORT_EMAIL_PASSWORD}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+    show-sql: 'false'
+
+logging:
+  level:
+    com.jwt.roles.config.SecurityConfig: DEBUG
+    com.jwt.roles.auth.AuthenticationService: DEBUG
+    com.jwt.roles.auth.AuthenticationController: DEBUG
+    com.jwt.roles.user.service.UserServiceImpl: DEBUG
+    com.jwt.roles.user.controller.UserControllerImpl: DEBUG
+    com.jwt.roles.config.filter.JwtAuthFilter: DEBUG
+    com.jwt.roles.exception.GlobalExceptionHandler: DEBUG
+    root: INFO
 
 resilience4j.ratelimiter:
   instances:
