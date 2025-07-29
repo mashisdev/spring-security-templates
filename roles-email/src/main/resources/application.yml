@@ -30,13 +30,13 @@ spring:
 
 logging:
   level:
-    com.jwt.roles.config.SecurityConfig: DEBUG
-    com.jwt.roles.auth.AuthenticationService: DEBUG
-    com.jwt.roles.auth.AuthenticationController: DEBUG
-    com.jwt.roles.user.service.UserServiceImpl: DEBUG
-    com.jwt.roles.user.controller.UserControllerImpl: DEBUG
-    com.jwt.roles.config.filter.JwtAuthFilter: DEBUG
-    com.jwt.roles.exception.GlobalExceptionHandler: DEBUG
+    com.jwt.roles_email.config.SecurityConfig: DEBUG
+    com.jwt.roles_email.auth.AuthenticationService: DEBUG
+    com.jwt.roles_email.auth.AuthenticationController: DEBUG
+    com.jwt.roles_email.user.service.UserServiceImpl: DEBUG
+    com.jwt.roles_email.user.controller.UserControllerImpl: DEBUG
+    com.jwt.roles_email.config.filter.JwtAuthFilter: DEBUG
+    com.jwt.roles_email.exception.GlobalExceptionHandler: DEBUG
     root: INFO
 
 resilience4j.ratelimiter:
