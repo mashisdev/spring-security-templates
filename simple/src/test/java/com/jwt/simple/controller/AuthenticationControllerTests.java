@@ -5,11 +5,13 @@ import com.jwt.simple.auth.AuthenticationController;
 import com.jwt.simple.auth.AuthenticationService;
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
+import com.jwt.simple.user.entity.User;
 import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.config.filter.JwtAuthFilter;
 import com.jwt.simple.config.filter.RateLimiterFilter;
 import com.jwt.simple.exception.user.UserAlreadyRegisteredException;
 import com.jwt.simple.exception.user.WrongEmailOrPasswordException;
+import com.jwt.simple.user.mapper.UserMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ class AuthenticationControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockitoBean
+    private UserMapper userMapper;
+
     private RegisterRequest registerRequest;
     private AuthenticationRequest authenticationRequest;
     private AuthenticationResponse authenticationResponse;
@@ -70,7 +75,7 @@ class AuthenticationControllerTests {
 
     @Test
     void register_ShouldReturnOkAndToken_WhenUserIsNotRegistered() throws Exception {
-        when(authenticationService.register(any(RegisterRequest.class)))
+        when(authenticationService.register(any(User.class)))
                 .thenReturn(authenticationResponse);
 
         mockMvc.perform(post("/api/auth/register")
@@ -82,7 +87,7 @@ class AuthenticationControllerTests {
 
     @Test
     void register_ShouldReturnConflict_WhenUserIsAlreadyRegistered() throws Exception {
-        when(authenticationService.register(any(RegisterRequest.class)))
+        when(authenticationService.register(any(User.class)))
                 .thenThrow(new UserAlreadyRegisteredException("User already registered"));
 
 

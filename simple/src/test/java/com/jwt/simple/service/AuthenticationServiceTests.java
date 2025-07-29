@@ -107,7 +107,7 @@ class AuthenticationServiceTests {
         when(userMapper.userToUserEntity(any(User.class))).thenReturn(userEntity);
         when(jwtService.generateToken(any(UserEntity.class))).thenReturn(jwtToken);
 
-        AuthenticationResponse response = authenticationService.register(registerRequest);
+        AuthenticationResponse response = authenticationService.register(userMapper.registerRequestToUser(registerRequest));
 
         assertNotNull(response);
         assertEquals(jwtToken, response.getToken());
@@ -126,7 +126,7 @@ class AuthenticationServiceTests {
         when(userMapper.registerRequestToUser(any(RegisterRequest.class))).thenReturn(user);
 
         UserAlreadyRegisteredException thrown = assertThrows(UserAlreadyRegisteredException.class, () -> {
-            authenticationService.register(registerRequest);
+            authenticationService.register(userMapper.registerRequestToUser(registerRequest));
         });
 
         assertEquals("User already registered", thrown.getMessage());
