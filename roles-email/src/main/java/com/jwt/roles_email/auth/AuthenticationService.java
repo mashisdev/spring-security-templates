@@ -185,7 +185,7 @@ public class AuthenticationService {
 
     }
 
-    public void resetPassword(String token, String newPassword) {
+    public void resetPassword(String token, String password) {
         log.info("Attempting to reset password for a user using a reset token.");
         log.debug("Received token for password reset: {}", token);
 
@@ -202,7 +202,7 @@ public class AuthenticationService {
         }
         log.debug("Reset token for user {} is valid and not expired. Proceeding to update password.", user.getEmail());
 
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(password));
         log.debug("New password encoded and set for user {}.", user.getEmail());
 
         user.setResetToken(null);
@@ -284,7 +284,7 @@ public class AuthenticationService {
 
     private void sendPasswordResetEmail(String email, String token) {
         String subject = "Password Reset Request";
-        String resetUrl = "https://seusite.com/reset-password?token=" + token;
+        String resetUrl = "http://localhost:4200/reset-password?token=" + token; // Example of resetUrl for Angular frontend
         String htmlMessage = "<html>"
                 + "<body style=\"font-family: Arial, sans-serif;\">"
                 + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
