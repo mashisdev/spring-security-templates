@@ -70,12 +70,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/redeem-password")
+    @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<Map<String, String>> redeemPassword(@RequestBody @Valid RedeemPasswordRequest request) {
         authenticationService.redeemPassword(request.email());
         return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
     }
 
     @PostMapping("/reset-password")
+    @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         authenticationService.resetPassword(request.token(), request.password());
         return ResponseEntity.ok().body(Map.of("message", "Credentials updated"));
