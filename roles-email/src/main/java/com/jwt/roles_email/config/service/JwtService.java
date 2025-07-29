@@ -19,8 +19,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${REFRESH_EXPIRATION}")
-    private long REFRESH_EXPIRATION;
+    @Value("${TOKEN_REFRESH_EXPIRATION}")
+    private long TOKEN_REFRESH_EXPIRATION;
 
     @Value("${TOKEN_EXPIRATION}")
     private long TOKEN_EXPIRATION;
@@ -92,7 +92,7 @@ public class JwtService {
             Date expiration = claims.getExpiration();
             long currentTime = System.currentTimeMillis();
             return expiration.before(new Date(currentTime)) &&
-                    expiration.getTime() + REFRESH_EXPIRATION > currentTime;
+                    expiration.getTime() + TOKEN_REFRESH_EXPIRATION > currentTime;
         } catch (Exception e) {
             return false;
         }

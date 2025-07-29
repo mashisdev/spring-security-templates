@@ -1,8 +1,6 @@
 package com.jwt.roles_email.auth;
 
-import com.jwt.roles_email.auth.request.AuthenticationRequest;
-import com.jwt.roles_email.auth.request.RegisterRequest;
-import com.jwt.roles_email.auth.request.VerifyRequest;
+import com.jwt.roles_email.auth.request.*;
 import com.jwt.roles_email.auth.response.AuthenticationResponse;
 import com.jwt.roles_email.user.dto.UserDto;
 import com.jwt.roles_email.user.entity.User;
@@ -69,6 +67,18 @@ public class AuthenticationController {
         AuthenticationResponse response = authenticationService.authenticate(request);
         log.info("User logged in successfully. Returning authentication token.");
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/redeem-password")
+    public ResponseEntity<Map<String, String>> redeemPassword(@RequestBody @Valid RedeemPasswordRequest request) {
+        authenticationService.redeemPassword(request.email());
+        return ResponseEntity.ok().body(Map.of("message", "Send the redeem password link to your email"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        authenticationService.resetPassword(request.token(), request.password());
+        return ResponseEntity.ok().body(Map.of("message", "Credentials updated"));
     }
 
 }

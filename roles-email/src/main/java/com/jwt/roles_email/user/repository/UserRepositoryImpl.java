@@ -39,6 +39,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByResetToken(String resetToken) {
+        return userJpaRepository.findByResetToken(resetToken).map(userMapper::userEntityToUser);
+    }
+
+    @Override
     public Boolean existsByEmail(String email) {
         return userJpaRepository.existsByEmail(email);
     }

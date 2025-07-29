@@ -123,6 +123,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
+    // --- Password Exception Handlers ---
+    // Handles PasswordResetTokenExpiredException, returning 410 GONE.
+    @ExceptionHandler(PasswordResetTokenExpiredException.class)
+    public ResponseEntity<ErrorMessage> handlePasswordRefreshTokenExpired(PasswordResetTokenExpiredException ex, HttpServletRequest request) {
+        log.warn("Password reset token expired: {} for path: {}", ex.getMessage(), request.getRequestURI(), ex);
+        ErrorMessage error = new ErrorMessage(HttpStatus.GONE.value(), ex, ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.GONE).body(error);
+    }
+
     // Handles HttpMediaTypeNotSupportedException, returning 415 UNSUPPORTED MEDIA TYPE.
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorMessage> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {

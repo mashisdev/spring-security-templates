@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByResetToken(String resetToken);
+
     List<User> findAll();
 
     Boolean existsByEmail(String email);
