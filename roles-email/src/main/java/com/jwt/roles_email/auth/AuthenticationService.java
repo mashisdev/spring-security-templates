@@ -173,13 +173,9 @@ public class AuthenticationService {
 
         user.setResetToken(token);
         user.setResetTokenExpiration(expiration);
-
         log.debug("New reset token generated for user {} expiring at {}.", user.getEmail(), expiration);
 
-        log.debug("Attempting to send password reset email to user: {}", user.getEmail());
         sendPasswordResetEmail(user.getEmail(), token);
-        log.info("Password reset email sent successfully to user {}.", user.getEmail());
-
         userRepository.save(user);
         log.info("Reset token successfully saved for user {}.", user.getEmail());
 
