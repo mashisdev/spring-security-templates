@@ -22,13 +22,10 @@ import org.springframework.http.HttpHeaders;
         servers = @Server(
                 description = "Development",
                 url = "http://localhost:8080"
-        ),
-        security = @SecurityRequirement(
-                name = "Bearer Authentication"
         )
 )
 @SecurityScheme(
-        name="Bearer Authentication",
+        name="bearerAuth",
         type = SecuritySchemeType.HTTP,
         in = SecuritySchemeIn.HEADER,
         paramName = HttpHeaders.AUTHORIZATION,

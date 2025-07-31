@@ -7,6 +7,8 @@ import com.jwt.roles.user.mapper.UserMapper;
 import com.jwt.roles.user.request.UpdateUserRequest;
 import com.jwt.roles.user.service.UserService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Tag(name = "User Management", description = "APIs for reading, updating and deleting users")
 @Slf4j
 public class UserControllerImpl implements UserController {
 
@@ -27,6 +30,7 @@ public class UserControllerImpl implements UserController {
     private final UserMapper userMapper;
 
     @Override
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/me")
     @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> findMeByEmail() {
@@ -39,6 +43,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping("/{id}")
     @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> findById(@PathVariable Long id) {
@@ -50,6 +55,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @SecurityRequirement(name = "bearerAuth")
     @GetMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     @RateLimiter(name = "userRateLimiter")
@@ -62,6 +68,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @SecurityRequirement(name = "bearerAuth")
     @PutMapping("/{id}")
     @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UpdateUserRequest updateUserRequest) {
@@ -86,6 +93,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("/{id}")
     @RateLimiter(name = "userRateLimiter")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
