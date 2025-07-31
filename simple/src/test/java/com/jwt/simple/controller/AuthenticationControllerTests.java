@@ -49,6 +49,7 @@ class AuthenticationControllerTests {
     private UserMapper userMapper;
 
     private RegisterRequest registerRequest;
+    private User user;
     private AuthenticationRequest authenticationRequest;
     private AuthenticationResponse authenticationResponse;
 
@@ -59,6 +60,14 @@ class AuthenticationControllerTests {
                 .lastname("Doe")
                 .email("john.doe@example.com")
                 .password("password123")
+                .build();
+
+        user = User.builder()
+                .id(1L)
+                .firstname(registerRequest.getFirstname())
+                .lastname(registerRequest.getLastname())
+                .email(registerRequest.getEmail())
+                .password(registerRequest.getPassword())
                 .build();
 
         authenticationRequest = AuthenticationRequest.builder()
@@ -77,11 +86,13 @@ class AuthenticationControllerTests {
     void register_ShouldReturnOkAndToken_WhenUserIsNotRegistered() throws Exception {
         when(authenticationService.register(any(User.class)))
                 .thenReturn(authenticationResponse);
+        when(userMapper.registerRequestToUser(any(RegisterRequest.class)))
+                .thenReturn(user);
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.token").value(authenticationResponse.getToken()));
     }
 
@@ -89,7 +100,8 @@ class AuthenticationControllerTests {
     void register_ShouldReturnConflict_WhenUserIsAlreadyRegistered() throws Exception {
         when(authenticationService.register(any(User.class)))
                 .thenThrow(new UserAlreadyRegisteredException("User already registered"));
-
+        when(userMapper.registerRequestToUser(any(RegisterRequest.class)))
+                .thenReturn(user);
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
