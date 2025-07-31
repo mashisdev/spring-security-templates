@@ -6,6 +6,7 @@ import com.jwt.roles.auth.response.AuthenticationResponse;
 import com.jwt.roles.user.entity.User;
 import com.jwt.roles.user.mapper.UserMapper;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication Management", description = "APIs for registering and logging users")
 @Slf4j
 public class AuthenticationController {
 

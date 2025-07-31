@@ -1,4 +1,4 @@
-package com.jwt.simple.config;
+package com.jwt.roles.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -12,8 +12,8 @@ import org.springframework.http.HttpHeaders;
 
 @OpenAPIDefinition(
         info =@Info(
-                title = "Simple JWT",
-                description = "Simple JWT authentication API template",
+                title = "Roles JWT",
+                description = "Roles JWT authentication API template",
                 version = "1.0.0",
                 contact = @Contact(
                         name = "mashisdev", url = "https://mashisdev.github.io/"
