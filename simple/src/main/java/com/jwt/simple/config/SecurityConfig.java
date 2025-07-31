@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,8 +40,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     log.debug("Configuring HTTP request authorization rules.");
 
-                    auth.requestMatchers("/api/auth/**").permitAll();
-                    log.debug("Permitted unauthenticated access to /api/auth/**.");
+                    auth.requestMatchers(
+                            "/api/auth/**",
+                                    "/v3/api-docs/**",
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/proxy/**",
+                                    "/actuator/**")
+                            .permitAll();
+                    log.debug("Permitted unauthenticated access to /api/auth/** and Swagger endpoints.");
 
                     auth.anyRequest().authenticated();
                     log.debug("Required authentication for all other requests.");
@@ -75,6 +83,12 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         log.info("CORS configuration applied to all paths (/**).");
         return source;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs*/**");
     }
 
 }

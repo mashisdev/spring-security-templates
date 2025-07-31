@@ -6,6 +6,7 @@ import com.jwt.simple.user.mapper.UserMapper;
 import com.jwt.simple.user.request.UpdateUserRequest;
 import com.jwt.simple.user.service.UserService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
+@Tag(name = "User Management", description = "APIs for reading, updating and deleting users")
 @Slf4j
 public class UserControllerImpl implements UserController {
 
