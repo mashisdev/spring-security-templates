@@ -37,7 +37,10 @@ This project is a robust Spring Boot application designed to provide a secure us
 <img width="100" alt="Mockito image" src="https://github.com/user-attachments/assets/e2f3d467-b5cc-4367-8949-7dbe60bc1dfc" />
 <img width="80" alt="H2 image" src="https://github.com/user-attachments/assets/7a179686-ce60-4250-aea7-13b9dfecc5d7" />
 
-#### Devops
+#### Devops & Docs
 - Docker
+- Swagger
 
 <img width="80" alt="Docker image" src="https://github.com/user-attachments/assets/a45de7fe-6234-4734-be20-4efd48bd9207" />
+<img width="80" alt="Swagger image" src="https://github.com/user-attachments/assets/7aad1e5b-6500-4a11-b705-7c2fe876e319" />
+
