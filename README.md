@@ -20,14 +20,18 @@ This guide will help you set up and run the project locally. You have 2 main opt
 
   3.  Replace the placeholder values with your specific configurations (e.g., database credentials, secret key, token expirations, etc.)
   
-      > Note: if the application requires some external service (like [Google App Passwords](https://support.google.com/mail/answer/185833?hl=es) for mailing) you must generate them and replace the example file ones. 
+      > **Note:** if the application requires some external service (like [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en) for email functionality) you must generate the corresponding environment variables and replace the placeholders. Otherwise, the application will not work.
 
   4.  **Run the application** in your IDE with env variables
 
       <details>
         <summary><b>How to inject Enviroment Variables in IntelliJ IDEA:</b></summary>
 
-        
+
+        <img width="500" alt="step 1" src="https://github.com/user-attachments/assets/3fbf0d29-6544-42ed-80fd-bf727f32101f" />
+
+        <img width="500" alt="step 2" src="https://github.com/user-attachments/assets/d17dd60b-68a8-4f2c-aff4-0ad0c48cbb77" />
+
       </details>
 
 </details>
@@ -38,7 +42,7 @@ This guide will help you set up and run the project locally. You have 2 main opt
 
   1. Ensure you have [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/) installed on your machine.
   
-  2. Replace all the enviroments variables nedeed on `docker-compose.yml` file:
+  2. Replace all the enviroments variables you want on `docker-compose.yml` file:
 
       ```yaml
       services:
@@ -47,4 +51,7 @@ This guide will help you set up and run the project locally. You have 2 main opt
           environment:
       ```
 
+      > **Note:** if the application requires some external service (like [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en) for email functionality) you must generate the corresponding environment variables and replace the placeholders. Otherwise, the application will not work.
+
   3. Run: `docker compose up`
+
