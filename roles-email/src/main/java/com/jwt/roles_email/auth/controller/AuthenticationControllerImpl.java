@@ -1,5 +1,6 @@
-package com.jwt.roles_email.auth;
+package com.jwt.roles_email.auth.controller;
 
+import com.jwt.roles_email.auth.AuthenticationService;
 import com.jwt.roles_email.auth.request.*;
 import com.jwt.roles_email.auth.response.AuthenticationResponse;
 import com.jwt.roles_email.user.dto.UserDto;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthenticationController {
+public class AuthenticationControllerImpl implements AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final UserMapper userMapper;
@@ -53,7 +54,7 @@ public class AuthenticationController {
 
     @PostMapping("/resend")
     @RateLimiter(name = "authRateLimiter")
-    public ResponseEntity<Map<String, String> > resendVerificationCode(@RequestBody @Valid VerifyRequest verifyRequest) {
+    public ResponseEntity<Map<String, String>> resendVerificationCode(@RequestBody @Valid VerifyRequest verifyRequest) {
         authenticationService.resendVerificationCode(verifyRequest);
         Map<String, String> response = Collections.singletonMap("verification", "Verification code sent");
         return ResponseEntity.ok(response);
