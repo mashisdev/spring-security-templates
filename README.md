@@ -3,9 +3,22 @@
 A collection of Spring Boot projects demonstrating different user authentication strategies using **Spring Security**. This repository serves as a starting point for developers looking to implement secure and scalable authentication in their Spring applications.
 
 1. [Simple JWT](https://github.com/mashisdev/spring-security-templates/tree/main/simple) authentication with secret key 🗝️
-2. [Role-based access control (RBAC)](https://github.com/mashisdev/spring-security-templates/tree/main/roles) with USER and ADMIN managed access to API endpoints 👑. Easy implementation with `@PreAuthorize("hasAuthority('ADMIN')")`
-3. [RBAC with Email validation](https://github.com/mashisdev/spring-security-templates/tree/main/roles-email), that enables new user registration with a 6-digit email verification code, ensuring the authenticity of the user's email address 📬.
-4. [Multiple OAuth2 Providers](https://github.com/mashisdev/spring-security-templates/tree/main/multi-auth) including Google, Facebook, GitHub and LinkedIn 🔗
+
+     ✅ **User Authentication**: user registration and login using JSON Web Tokens (JWT).
+
+     ✅ **User Management**: CRUD operations for user entities. Users can only perform CRUD operations on their own user data, not on other users data.
+
+     ✅ **Data Persistence** with Spring Data JPA and MySQL.
+
+     ✅ **DTO Mapping**: mapping between entity, DTO and requests for clean data transfer.
+
+     ✅ **Validation**: input validation to maintain data integrity and improve API reliability.
+
+     ✅ **Global Exception Handling**: includes a `@RestControllerAdvice` that provides standardized and descriptive error messages for the API. It returns a consistent JSON response including a timestamp, status, exception name, message, and the request path for easier debugging.
+   
+3. [Role-based access control (RBAC)](https://github.com/mashisdev/spring-security-templates/tree/main/roles) with USER and ADMIN managed access to API endpoints 👑. Easy implementation with `@PreAuthorize("hasAuthority('ADMIN')")`
+4. [RBAC with Email validation](https://github.com/mashisdev/spring-security-templates/tree/main/roles-email), that enables new user registration with a 6-digit email verification code, ensuring the authenticity of the user's email address 📬.
+5. [Multiple OAuth2 Providers](https://github.com/mashisdev/spring-security-templates/tree/main/multi-auth) including Google, Facebook, GitHub and LinkedIn 🔗
 
 ## Dependencies
 
@@ -90,5 +103,6 @@ This guide will help you set up and run the project locally. You have 2 main opt
       > **Note:** if the application requires some external service (like [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en) for email functionality) you must generate the corresponding environment variables and replace the placeholders. Otherwise, the application will not work.
 
   3. Run: `docker compose up`
+
 
 
