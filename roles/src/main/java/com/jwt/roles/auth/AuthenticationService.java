@@ -1,7 +1,6 @@
 package com.jwt.roles.auth;
 
 import com.jwt.roles.auth.request.AuthenticationRequest;
-import com.jwt.roles.auth.request.RegisterRequest;
 import com.jwt.roles.auth.response.AuthenticationResponse;
 import com.jwt.roles.config.JwtService;
 import com.jwt.roles.exception.user.UserAlreadyRegisteredException;

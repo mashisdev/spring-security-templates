@@ -7,7 +7,6 @@ import com.jwt.roles.user.mapper.UserMapper;
 import com.jwt.roles.user.request.UpdateUserRequest;
 import com.jwt.roles.user.service.UserService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
