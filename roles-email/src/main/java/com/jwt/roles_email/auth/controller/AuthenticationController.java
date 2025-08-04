@@ -9,10 +9,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
+@Tag(name = "Authentication Management", description = "APIs for user registration, login, and password management.")
 public interface AuthenticationController {
 
     @Operation(summary = "Register a new user", description = "Creates a new user and sends a verification code to their email.")
