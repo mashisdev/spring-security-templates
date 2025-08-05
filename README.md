@@ -64,6 +64,12 @@ A collection of Spring Boot projects demonstrating different user authentication
 <img width="80" alt="Docker image" src="https://github.com/user-attachments/assets/a45de7fe-6234-4734-be20-4efd48bd9207" />
 <img width="80" alt="Swagger image" src="https://github.com/user-attachments/assets/7aad1e5b-6500-4a11-b705-7c2fe876e319" />
 
+#### Situational dependencies
+- Java Mail Sender
+- OAuth2 Client
+
+<img width="80" alt="Java Mail Sender" src="https://github.com/user-attachments/assets/78233584-ec8b-4851-83e9-7224da7ac478" />
+<img width="80" alt="OAuth2 image" src="https://github.com/user-attachments/assets/e1aa011d-c2e5-4fa7-a4a2-74700004f083" />
 
 ## Getting Started
 This guide will help you set up and run the project locally. You have 2 main options:
@@ -112,6 +118,7 @@ This guide will help you set up and run the project locally. You have 2 main opt
       > **Note:** if the application requires some external service (like [Google App Passwords](https://support.google.com/mail/answer/185833?hl=en) for email functionality) you must generate the corresponding environment variables and replace the placeholders. Otherwise, the application will not work.
 
   3. Run: `docker compose up`
+
 
 
 
