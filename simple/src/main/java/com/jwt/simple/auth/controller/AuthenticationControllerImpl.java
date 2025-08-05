@@ -1,5 +1,6 @@
-package com.jwt.simple.auth;
+package com.jwt.simple.auth.controller;
 
+import com.jwt.simple.auth.AuthenticationService;
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.auth.response.AuthenticationResponse;

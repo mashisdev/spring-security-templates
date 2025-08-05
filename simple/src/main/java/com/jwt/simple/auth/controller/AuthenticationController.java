@@ -1,4 +1,4 @@
-package com.jwt.simple.auth;
+package com.jwt.simple.auth.controller;
 
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;

@@ -1,7 +1,7 @@
 package com.jwt.simple.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jwt.simple.auth.AuthenticationControllerImpl;
+import com.jwt.simple.auth.controller.AuthenticationControllerImpl;
 import com.jwt.simple.auth.AuthenticationService;
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
