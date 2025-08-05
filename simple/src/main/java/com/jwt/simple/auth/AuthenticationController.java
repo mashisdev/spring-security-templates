@@ -4,35 +4,15 @@ import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
 import com.jwt.simple.auth.response.AuthenticationResponse;
 import com.jwt.simple.exception.ErrorMessage;
-import com.jwt.simple.user.entity.User;
-import com.jwt.simple.user.mapper.UserMapper;
-import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/auth")
-@RequiredArgsConstructor
-@Tag(name = "Authentication Management", description = "APIs for registering and logging users")
-@Slf4j
-public class AuthenticationController {
-
-    private final AuthenticationService authenticationService;
-    private final UserMapper userMapper;
+public interface AuthenticationController {
 
     @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token for authentication.")
     @ApiResponses(value = {
@@ -61,18 +41,7 @@ public class AuthenticationController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    @PostMapping("/register")
-    @RateLimiter(name = "authRateLimiter")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
-        log.info("Received registration request for email: {}", request.getEmail());
-
-        User user = userMapper.registerRequestToUser(request);
-        log.debug("Mapped RegisterRequest to User object for email: {}", user.getEmail());
-
-        AuthenticationResponse response = authenticationService.register(user);
-        log.info("User registered successfully. Returning authentication token.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+    ResponseEntity<AuthenticationResponse> register(RegisterRequest request);
 
     @Operation(summary = "Authenticate an existing user", description = "Authenticates an existing user and returns a JWT token.")
     @ApiResponses(value = {
@@ -101,14 +70,5 @@ public class AuthenticationController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    @PostMapping("/login")
-    @RateLimiter(name = "authRateLimiter")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
-        log.info("Received login request for email: {}", request.getEmail());
-
-        AuthenticationResponse response = authenticationService.authenticate(request);
-        log.info("User logged in successfully. Returning authentication token.");
-        return ResponseEntity.ok(response);
-    }
-
+    ResponseEntity<AuthenticationResponse> login(AuthenticationRequest request);
 }

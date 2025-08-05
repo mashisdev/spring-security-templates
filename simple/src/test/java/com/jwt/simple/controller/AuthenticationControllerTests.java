@@ -1,7 +1,7 @@
 package com.jwt.simple.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jwt.simple.auth.AuthenticationController;
+import com.jwt.simple.auth.AuthenticationControllerImpl;
 import com.jwt.simple.auth.AuthenticationService;
 import com.jwt.simple.auth.request.AuthenticationRequest;
 import com.jwt.simple.auth.request.RegisterRequest;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(    controllers = AuthenticationController.class,
+@WebMvcTest(    controllers = AuthenticationControllerImpl.class,
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthFilter.class, RateLimiterFilter.class}
