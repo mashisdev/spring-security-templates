@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+@Tag(name = "Authentication Management", description = "APIs for registering and logging users")
 public interface AuthenticationController {
 
     @Operation(summary = "Register a new user", description = "Registers a new user and returns a JWT token for authentication.")

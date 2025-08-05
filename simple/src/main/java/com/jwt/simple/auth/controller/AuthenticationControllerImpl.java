@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@Tag(name = "Authentication Management", description = "APIs for registering and logging users")
 @Slf4j
 public class AuthenticationControllerImpl implements AuthenticationController {
 
     private final AuthenticationService authenticationService;
     private final UserMapper userMapper;
 
+    @Override
     @PostMapping("/register")
     @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody @Valid RegisterRequest request) {
@@ -41,6 +41,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Override
     @PostMapping("/login")
     @RateLimiter(name = "authRateLimiter")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {

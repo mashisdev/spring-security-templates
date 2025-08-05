@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
-@Tag(name = "User Management", description = "APIs for reading, updating and deleting users")
 @Slf4j
 public class UserControllerImpl implements UserController {
 
