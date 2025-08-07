@@ -4,9 +4,10 @@ import com.jwt.roles_email.user.entity.User;
 import com.jwt.roles_email.user.entity.UserEntity;
 import com.jwt.roles_email.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        return userJpaRepository.findAll().stream().map(userMapper::userEntityToUser).toList();
+    public Page<User> findAll(Pageable pageable) {
+        return userJpaRepository.findAll(pageable).map(userMapper::userEntityToUser);
     }
 
     @Override

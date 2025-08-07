@@ -8,9 +8,10 @@ import com.jwt.roles_email.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,12 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findAll() {
+    public Page<UserDto> findAll(Pageable pageable) {
         log.info("Attempting to find all user DTOs.");
-        List<UserDto> userDtos = userRepository.findAll().stream()
-                .map(userMapper::userToUserDto)
-                .toList();
-        log.info("Found {} user DTOs.", userDtos.size());
+        Page<UserDto> userDtos = userRepository.findAll(pageable)
+                .map(userMapper::userToUserDto);
+        log.info("Found {} user DTOs.", userDtos.getSize());
         return userDtos;
     }
 

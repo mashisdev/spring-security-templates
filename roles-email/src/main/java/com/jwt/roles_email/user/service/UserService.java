@@ -1,8 +1,8 @@
 package com.jwt.roles_email.user.service;
 
 import com.jwt.roles_email.user.dto.UserDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface UserService {
 
@@ -10,7 +10,7 @@ public interface UserService {
 
     UserDto findByEmail(String email);
 
-    List<UserDto> findAll();
+    Page<UserDto> findAll(Pageable pageable);
 
     UserDto update(UserDto userDto);
 

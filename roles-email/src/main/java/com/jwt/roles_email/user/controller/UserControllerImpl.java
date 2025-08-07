@@ -10,12 +10,13 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -53,11 +54,11 @@ public class UserControllerImpl implements UserController {
     @GetMapping()
     @PreAuthorize("hasAuthority('ADMIN')")
     @RateLimiter(name = "userRateLimiter")
-    public ResponseEntity<List<UserDto>> findAll() {
+    public ResponseEntity<Page<UserDto>> findAll(@PageableDefault(size = 10) Pageable pageable) {
         log.info("Received request to find all users");
 
-        List<UserDto> users = userService.findAll();
-        log.info("Successfully retrieved all users. Total: {}", users.size());
+        Page<UserDto> users = userService.findAll(pageable);
+        log.info("Successfully retrieved all users. Total: {}", users.getSize());
         return ResponseEntity.ok(users);
     }
 
