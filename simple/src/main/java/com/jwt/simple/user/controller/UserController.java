@@ -4,8 +4,10 @@ import com.jwt.simple.exception.ErrorMessage;
 import com.jwt.simple.user.dto.UserDto;
 import com.jwt.simple.user.request.UpdateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -75,7 +77,7 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<UserDto> findById(Long id);
+    ResponseEntity<UserDto> findById(@Parameter(description = "ID of the user to retrieve", example = "1") Long id);
 
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Find all users", description = "Retrieves a list of all users. This may be restricted to administrators in a real application.")
@@ -141,7 +143,7 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<UserDto> update(Long id, UpdateUserRequest updateUserRequest);
+    ResponseEntity<UserDto> update(@Parameter(description = "ID of the user to update", example = "1") Long id, @RequestBody(description = "The user data to update") UpdateUserRequest updateUserRequest);
 
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Delete a user", description = "Deletes a user by ID. An authenticated user can only delete their own account.")
@@ -179,5 +181,5 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<Void> delete(Long id);
+    ResponseEntity<Void> delete(@Parameter(description = "ID of the user to delete", example = "1") Long id);
 }

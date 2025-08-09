@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -123,7 +124,7 @@ public interface UserController {
             )
     })
     @SecurityRequirement(name = "bearerAuth")
-    ResponseEntity<UserDto> update(@Parameter(description = "ID of the user to update", example = "1") Long id, UpdateUserRequest updateUserRequest);
+    ResponseEntity<UserDto> update(@Parameter(description = "ID of the user to update", example = "1") Long id, @RequestBody(description = "The user data to update") UpdateUserRequest updateUserRequest);
 
     @Operation(summary = "Delete a user", description = "Deletes a user by their ID. Can only delete your own user account.")
     @ApiResponses(value = {
