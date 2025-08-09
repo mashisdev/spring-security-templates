@@ -19,4 +19,5 @@ public class UserDto {
         private String email;
         @Enumerated(EnumType.STRING)
         private Role role;
+        private boolean enabled;
 }

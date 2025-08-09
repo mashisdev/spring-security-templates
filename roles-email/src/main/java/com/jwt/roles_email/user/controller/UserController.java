@@ -2,6 +2,7 @@ package com.jwt.roles_email.user.controller;
 
 import com.jwt.roles_email.exception.ErrorMessage;
 import com.jwt.roles_email.user.dto.UserDto;
+import com.jwt.roles_email.user.entity.UserEntity;
 import com.jwt.roles_email.user.request.UpdateUserRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -46,7 +47,7 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<UserDto> findMeByEmail();
+    ResponseEntity<UserDto> findMeByEmail(UserEntity authenticatedUser);
 
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Find user by ID", description = "Retrieves a user by their unique ID. Requires a valid JWT token.")
@@ -148,7 +149,7 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<UserDto> update(Long id, UpdateUserRequest updateUserRequest);
+    ResponseEntity<UserDto> update(Long id, UpdateUserRequest updateUserRequest, UserEntity currentUser);
 
     @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Delete a user", description = "Deletes a user by their ID. The authenticated user can only delete their own account.")
@@ -183,5 +184,5 @@ public interface UserController {
                             schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    ResponseEntity<Void> delete(Long id);
+    ResponseEntity<Void> delete(Long id, UserEntity currentUser);
 }
